@@ -1,0 +1,60 @@
+.event-card {
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 10px;
+  border-radius: 8px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease-in-out;
+}
+
+.event-card:hover {
+  transform: translateY(-5px); /* Slight lift effect on hover */
+}
+
+.event-card h2 {
+  color: #2c3e50; /* Darker color for the title */
+  font-size: 1.25rem; /* Larger size for the title */
+  margin-bottom: 0.5rem;
+}
+
+.event-card p {
+  font-size: 0.9rem; /* Slightly smaller font size for the body */
+  color: #666; /* Lighter color for less important text */
+  line-height: 1.6; /* Increased line height for readability */
+}
+
+.event-card .meta-info {
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #333;
+  margin: 5px 0; /* Spacing between meta info items */
+}
+
+.meta-info i {
+  font-size: 1rem; /* Larger size for icons */
+  margin-right: 5px; /* Spacing between icon and text */
+}
+
+.event-card .head-count {
+  font-weight: bold; /* Make head count bold */
+  margin-top: 1rem; /* Spacing above head count */
+}
+
+.event-card button {
+  padding: 10px 20px;
+  background-color: #27ae60; /* RSVP button with a distinct color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.event-card button:hover {
+  background-color: #2ecc71; /* Lighter shade on hover */
+}

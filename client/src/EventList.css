@@ -1,0 +1,16 @@
+.event-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 40px; /* More padding for better spacing */
+  width: 100%;
+  max-width: 1200px; /* Max width for the grid */
+  margin: auto; /* Center the grid */
+}
+
+@media (max-width: 600px) {
+  .event-list {
+    grid-template-columns: 1fr; /* Stack the cards on smaller screens */
+    padding: 20px; /* Less padding on smaller screens */
+  }
+}

@@ -1,0 +1,36 @@
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa; /* Consistent background color */
+  color: #333; /* Default text color for better readability */
+}
+
+h1 {
+  padding-left: 40%; /* Center the main title */
+  margin-bottom: 0; /* Remove bottom margin for spacing */
+  font-weight: 400;
+  color: #1b1c1e;
+  font-size: 2.5rem; /* Larger font size for the main title */
+  margin-top: 20px;
+  border-bottom-left-radius: 1px solid black;
+  margin-bottom: 20px; /* Spacing above and below the title */
+}
+
+
+h4 {
+  font-weight: 400;
+  padding-left: 50%;
+  padding-bottom: 1%;
+  color: #1b1c1e;
+  font-size: 1.2rem; /* Larger font size for the main title */
+  margin-top: 10px;
+  margin-bottom: 20px; /* Spacing above and below the title */
+
+}

@@ -1,0 +1,87 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/javascript-node-mongo
+{
+	"name": "Node.js & Mongo DB",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+	// Students edit on github.com and need to merge. Set default merge strategy.
+	"onCreateCommand": "git config --global pull.rebase false",
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+      // Set *default* container specific settings.json values on container create.
+      "settings": {
+        "breadcrumbs.enabled": true,
+        "css.validate": false,
+        "editor.minimap.maxColumn": 80,
+        "editor.minimap.showSlider": "always",
+        "editor.stickyScroll.enabled": true,
+        "editor.wordWrap": "on",
+        "explorer.compactFolders": false,
+        "files.insertFinalNewline": true,
+        "files.trimFinalNewlines": true,
+        "files.trimTrailingWhitespace": true,
+        "git.autofetch": true,
+        "markdownlint.config": {
+          "MD012": false,
+          "MD013": false,
+          "MD022": false,
+          "MD025": false,
+          "MD033": false,
+          "MD036": false,
+          "MD037": false,
+          "MD040": false
+        },
+        "thunder-client.defaultURL": "http://localhost:3000/",
+        "workbench.activityBar.visible": true,
+        "workbench.editor.highlightModifiedTabs": true,
+        "workbench.editor.wrapTabs": true,
+        "[css]": {
+          "editor.defaultFormatter": "vscode.css-language-features"
+        },
+        "[html]": {
+          "editor.defaultFormatter": "vscode.html-language-features"
+        },
+        "[javascript]": {
+          "editor.defaultFormatter": "vscode.typescript-language-features"
+        }
+      },
+      "extensions": [
+        "pucelle.vscode-css-navigation",
+        "rax.vscode-flexbox-picker",
+        "ecmel.vscode-html-css",
+        "yzhang.markdown-all-in-one",
+        "bierner.markdown-checkbox",
+        "davidanson.vscode-markdownlint",
+        "jgclark.vscode-todo-highlight",
+        "rangav.vscode-thunder-client",
+        "anweber.httpbook",
+        "anweber.vscode-httpyac",
+        "mongodb.mongodb-vscode"
+      ]
+    }
+	},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [3000, 8080],
+	"portsAttributes": {
+		"3000": {
+			"label": "client"
+		},
+		"8080": {
+			"label": "server"
+		}
+	},
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "yarn install",
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
