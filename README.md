@@ -1,4 +1,4 @@
-# Event RSVP Application -  Stephan Volynets
+# Event RSVP Application  by  Stephan Volynets
 
 > ***A Modern, Responsive Client sided  React Application for managing event RSVPs w/ realtime updates and an intuitive user interface.***
 
