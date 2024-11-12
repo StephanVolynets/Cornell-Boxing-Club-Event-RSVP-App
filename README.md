@@ -1,8 +1,22 @@
 # Event RSVP Application -  Stephan Volynets
 
-> *A Modern, Responsive Client sided  React Application for managing event RSVPs w/ realtime updates and an intuitive user interface.*
+> ***A Modern, Responsive Client sided  React Application for managing event RSVPs w/ realtime updates and an intuitive user interface.***
 
-## Project Overview
+<h1 align="center">Snapshot</h1>
+
+<p>
+   <img src="https://github.com/user-attachments/assets/aa4b077b-91c4-435e-ade9-68e598878083" alt="Desktop Browser" style="width:100% height="700">
+        <br>
+
+</p>
+
+ <p align="center">
+    <img src="https://github.com/user-attachments/assets/5bfebf77-8365-4672-a8fb-7377a32a3e7d" alt="Desktop Browser"  width="300">
+     
+ </p>
+
+    
+# Project Overview
 
 This application provides a seamless event management experience with features including:
 
@@ -223,5 +237,3 @@ The application will be available at `http://localhost:3000`.
 5. Create a Pull Request
 
 
-git config --global user.email "svv6@cornell.edu"
-  git config --global user.name "StephanVolynets"
