@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skeleton, SimpleGrid, VStack, Box } from '@chakra-ui/react';
+import { Skeleton, VStack, Box } from '@chakra-ui/react';
 
 function LoadingSkeleton({ count }) {
   return (
@@ -11,6 +11,8 @@ function LoadingSkeleton({ count }) {
           borderRadius="lg"
           p={6}
           bg="white"
+          height="100%"
+          shadow="md"
         >
           <VStack align="stretch" spacing={4}>
             <Skeleton height="24px" width="80%" />

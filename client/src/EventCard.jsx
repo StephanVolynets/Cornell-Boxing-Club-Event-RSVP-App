@@ -23,29 +23,37 @@ function EventCard({ event, onRSVPToggle, isRSVPed, isLoading }) {
     <ScaleFade in={true} initialScale={0.9}>
       <Box
         borderWidth="1px"
-        borderRadius="lg"
+        borderRadius="xl"
         borderColor={borderColor}
         bg={bgColor}
         p={6}
-        shadow="md"
+        shadow="lg"
         role="article"
         aria-label={`Event: ${event.name}`}
         height="100%"
         display="flex"
         flexDirection="column"
+        _hover={{
+          transform: 'translateY(-4px)',
+          shadow: '2xl',
+          borderColor: 'blue.200',
+        }}
+        transition="all 0.3s ease"
       >
         <VStack align="stretch" spacing={4} height="100%">
           <Tooltip label={event.name} placement="top" hasArrow>
-            <Heading 
-              size="md" 
+            <Heading
+              size="md"
               noOfLines={2}
-              _hover={{ color: 'blue.500' }}
-              transition="color 0.2s"
+              bgGradient="linear(to-r, blue.500, purple.500)"
+              bgClip="text"
+              _hover={{ transform: 'scale(1.01)' }}
+              transition="transform 0.2s"
             >
               {event.name}
             </Heading>
           </Tooltip>
-          
+
           <Text color={textColor} noOfLines={3}>
             {event.description}
           </Text>
@@ -70,12 +78,13 @@ function EventCard({ event, onRSVPToggle, isRSVPed, isLoading }) {
 
             <HStack spacing={4} width="100%">
               <Icon as={InfoIcon} color="purple.500" />
-              <Badge 
-                colorScheme="purple" 
+              <Badge
+                colorScheme="purple"
                 fontSize="sm"
                 px={3}
                 py={1}
                 borderRadius="full"
+                variant="subtle"
               >
                 {event.headCount} {event.headCount === 1 ? 'person' : 'people'} attending
               </Badge>

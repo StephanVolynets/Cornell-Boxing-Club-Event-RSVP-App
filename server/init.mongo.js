@@ -61,20 +61,6 @@ db.events.insertMany([
     date: '2023-09-10',
     location: 'Downtown Ithaca',
     headCount: 0
-  },
-  {
-    name: 'Cayuga Nature Center Animal Exhibit',
-    description: 'Exhibit featuring local wildlife and natural history of the Cayuga area.',
-    date: '2023-11-05',
-    location: 'Cayuga Nature Center',
-    headCount: 0
-  },
-  {
-    name: 'Ithaca Art Trail Weekend',
-    description: 'Weekend event where local artists open their studios to the public.',
-    date: '2023-10-22',
-    location: 'Various locations in Ithaca',
-    headCount: 0
   }
 ]);
 

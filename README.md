@@ -1,106 +1,227 @@
-# Stephans Project 2 INFO 2310 
+# Event RSVP Application -  Stephan Volynets
 
-*Since this projects environment was built in a private Cornell Repository I had to use a template. [Why my commits are missing]*
+> *A Modern, Responsive Client sided  React Application for managing event RSVPs w/ realtime updates and an intuitive user interface.*
 
-# Event RSVP App
+## Project Overview
 
-A full-stack MERN (MongoDB, Express.js, React, Node.js) application for managing event RSVPs.
+This application provides a seamless event management experience with features including:
 
-## Overview
-
-This Event RSVP App allows users to create, view, and RSVP to events. It features a RESTful API backend built with Express.js and MongoDB, and a React frontend for a seamless user experience.
-
-## Key Features
-
-- Create and manage events
-- RSVP and un-RSVP to events
-- View all events with their details
-- Real-time head count updates
+- 🎪 Dynamic event listing with responsive grid layout
+- 🔄 Real-time RSVP updates
+- 💫 Smooth animations and transitions
+- 🎨 Modern, accessible UI with Chakra UI
+- 📱 Full responsive design
+- ⚡ Optimized performance with React
 
 ## Technical Stack
 
-- **Backend**: Node.js with Express.js
-- **Database**: MongoDB
-- **Frontend**: React (with hooks for state management)
-- **API Communication**: Axios for HTTP requests
+- **Frontend**: React, Chakra UI, Framer Motion
+- **Backend**: Express.js, MongoDB
+- **State Management**: React Hooks
+- **API Communication**: Axios
+- **Styling**: Chakra UI + Custom Theme
+- **Animation**: Framer Motion
 
-## API Endpoints
+## Performance Optimizations
 
-The app includes several RESTful API endpoints for event management:
+- ***Lazy loading of components***
+- ***Optimized re-renders***, minimizing unecessary renders
+- ***Debounced API calls***, reducing number of API calls
+- ***Skeleton loading states***
+- ***Image optimization***
 
-- `GET /api/events`: Fetch all events
-- `POST /api/events/create`: Create a new event
-- `DELETE /api/events/:id/delete`: Delete an event
-- `POST /api/events/:id/headCount/rsvp`: RSVP to an event
-- `POST /api/events/:id/headCount/unrsvp`: Un-RSVP from an event
+## Component Architecture
 
-## Data Model
+### Component Tree
+```
+App
+├── ChakraProvider (Theme)
+└── Container
+    ├── Header
+    └── EventList
+        ├── LoadingSkeleton
+        └── EventCard
+            ├── Event Details
+            └── RSVP Button
+```
 
-Events are stored in MongoDB with the following schema:
+### Data Flow
+```mermaid
+graph TD
+    A[App] -->|Events Data| B[EventList]
+    A -->|RSVP Actions| B
+    B -->|Event Props| C[EventCard]
+    C -->|RSVP Toggle| A
+    A -->|API Calls| D[Backend]
+    D -->|Response| A
+```
+
+
+
+## Data Management
+
+### API Integration
 
 ```javascript
+// Example API call implementation
+const fetchEvents = async () => {
+  try {
+    const response = await axios.get("http://localhost:8080/api/events");
+    setEvents(response.data);
+  } catch (err) {
+    // Error handling
+  }
+};
+```
+
+### API Endpoints
+**Response Format: Newly created event object.**
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/events` | GET | Fetch all events |
+| `/api/events/:id/headCount/rsvp` | POST | RSVP to an event |
+| `/api/events/:id/headCount/unrsvp` | POST | Cancel RSVP |
+
+### Database Schema:
+**Events Collection**
+
+> Each document in the `events` collection has the following schema:
+
+- `_id`: ObjectId - Unique identifier for the event.
+- `name`: String - Name of the event.
+- `description`: String - Description of the event.
+- `date`: Date - Date when the event is scheduled.
+- `location`: String - Location where the event will take place.
+- `headCount`: Integer - Number of people who have RSVPed to the event.
+
+Example Document:
+```json
 {
-  _id: ObjectId,
-  name: String,
-  description: String,
-  date: Date,
-  location: String,
-  headCount: Integer
+  "_id": ObjectId("..."),
+  "name": "Ithaca Farmers Market",
+  "description": "A gathering of local farmers and artisans. Fresh produce, handmade crafts, and more.",
+  "date": "2023-07-15",
+  "location": "Ithaca Farmers Market Pavilion",
+  "headCount": 0
 }
+
+## React Hooks Usage
+
+### State Management
+```javascript
+// Core state hooks
+const [events, setEvents] = useState([]);
+const [loading, setLoading] = useState(false);
+const [userRSVPs, setUserRSVPs] = useState({});
 ```
 
-## Frontend Architecture
+### Effect Patterns
+```javascript
+// Data fetching effect
+useEffect(() => {
+  const fetchEvents = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get("http://localhost:8080/api/events");
+      setEvents(response.data);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchEvents();
+}, []);
+```
 
-The React frontend is structured with components for displaying events and managing RSVPs. It uses React hooks (useState, useEffect) for state management and side effects.
-![Xnip2024-08-26_20-38-03](https://github.com/user-attachments/assets/cd1f1018-596c-4a62-bb53-6be46cb98f47)
+## User Interface
 
-# Getting Started
-## Client
+### Design System
+- **Theme**: Custom Chakra UI theme with Inter font
+- **Colors**: Dynamic color scheme with gradient accents
+- **Components**: Reusable, accessible components
+- **Animations**: Framer Motion for smooth transitions
 
-```sh
+### Key Features
+1. **Responsive Grid Layout**
+   - Adaptive columns based on screen size
+   - Maintains symmetry with filler cards
+
+2. **Interactive Cards**
+   - Hover animations
+   - Loading states
+   - RSVP status indicators
+
+3. **Accessibility**
+   - ARIA labels
+   - Keyboard navigation
+   - Screen reader support
+
+### User Flow
+1. User views event grid
+2. Hovers over event for more details
+3. Clicks RSVP button
+4. Receives confirmation toast
+5. Sees updated attendance count
+
+## Getting Started
+
+### Prerequisites
+- Node.js (v14 or higher)
+- MongoDB
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+```
+
+2. Install dependencies:
+```bash
+# Install client dependencies
 cd client
-```
+npm install
 
-**Install dependencies:**
-
-```sh
+# Install server dependencies
+cd ../server
 npm install
 ```
 
-**Start development server:**
-
-```sh
-npm start
+3. Configure environment:
+```bash
+# Create .env file in server directory
+echo "PORT=8080" > .env
 ```
 
-## Server
+### Running Locally
 
-```sh
-cd server
-```
-
-**Install dependencies:**
-
-```sh
-npm install
-```
-
-**Initialize database:**
-
-```sh
+1. Start MongoDB:
+```bash
 mongosh init.mongo.js
 ```
 
-**Start development server:**
-
-```sh
+2. Start the server:
+```bash
+cd server
 npm run dev
 ```
 
+3. Start the client:
+```bash
+cd client
+npm start
+```
 
-## Contributing
+The application will be available at `http://localhost:3000`.
 
-Prof. Kyle Harms for teaching me how to harness these technologies. 
+# Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
 
-
+git config --global user.email "svv6@cornell.edu"
+  git config --global user.name "StephanVolynets"
