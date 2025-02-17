@@ -15,13 +15,14 @@ function Header() {
       mb={8}
     >
       <RoughNotationGroup show={true}>
-        <Box mb={4}>
+        <Box mb={4} position="relative">
           <RoughNotation
             type="underline"
             color="#4299E1"
             strokeWidth={4}
             iterations={1}
             animationDuration={1500}
+            multiline={true}
           >
             <Text
               as="span"
@@ -31,31 +32,26 @@ function Header() {
               bgGradient="linear(to-r, blue.500, purple.500)"
               bgClip="text"
               letterSpacing="tight"
+              position="relative"
+              zIndex={1}
             >
               Event RSVP App
             </Text>
           </RoughNotation>
         </Box>
 
-        <Box>
-          <RoughNotation
-            type="underline"
-            color="#A8D5BA"
-            strokeWidth={4}
-            iterations={1}
-            animationDelay={500}
-            animationDuration={1500}
+        <Box position="relative">
+          <Text
+            as="span"
+            display="inline-block"
+            fontSize="2xl"
+            color="gray.600"
+            fontWeight="medium"
+            position="relative"
+            zIndex={1}
           >
-            <Text
-              as="span"
-              display="inline-block"
-              fontSize="2xl"
-              color="gray.600"
-              fontWeight="medium"
-            >
-              By Stephan Volynets
-            </Text>
-          </RoughNotation>
+            By Stephan Volynets
+          </Text>
         </Box>
       </RoughNotationGroup>
     </MotionBox>
