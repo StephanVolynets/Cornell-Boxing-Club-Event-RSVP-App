@@ -1,8 +1,8 @@
-# Cornell Boxing Club Event Registration App
+# Cornell Boxing Club Event Registration App 
+> Created by **Stephan Volynets**
+>> A Modern, _responsive full stack app_ for managing Cornell Boxing Club member event registrations, with real time updates and an intuitive user interface.
+>>> This was my final project for [INFO 2310](https://classes.cornell.edu/browse/roster/SP25/class/INFO/2310).   Special Thanks to [Professor Kyle Harms](https://kharms.infosci.cornell.edu/index.html) for teaching me Client Side Rendering & all things HTTP communication! 
 
-> ***A Modern, responsive full stack Application for managing Cornell Boxing Club member event registrations, with real time updates and an intuitive user interface.***
-
-<h1 align="center">Snapshot</h1>
 
 <p>
    <img src="https://github.com/user-attachments/assets/9db0ee41-016a-4a71-880c-90c4af1feb38" alt="Desktop Browser" style="width:100% height="700">
@@ -294,3 +294,5 @@ EVENT-RSVP-APP-MERN-2/
 3. Commit your changes
 4. Push to the branch
 5. Create a Pull Request
+
+> Special Thanks to [Professor Kyle Harms](https://kharms.infosci.cornell.edu/index.html) for teaching me client side rendering & all things HTTP communication!
