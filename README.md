@@ -1,6 +1,6 @@
 # Cornell Boxing Club Event Registration App 
 > Created by **Stephan Volynets**
->> A Modern, _responsive full stack app_ for managing Cornell Boxing Club member event registrations, with real time updates and an intuitive user interface.
+>> A _modern, responsive full stack single page application_ for managing Cornell Boxing Club member event registrations, with real time updates and an intuitive user interface.
 >>> This was my final project for [INFO 2310](https://classes.cornell.edu/browse/roster/SP25/class/INFO/2310).   Special Thanks to [Professor Kyle Harms](https://kharms.infosci.cornell.edu/index.html) for teaching me Client Side Rendering & all things HTTP communication! 
 
 
