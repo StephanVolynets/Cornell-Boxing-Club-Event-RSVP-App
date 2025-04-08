@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { ChakraProvider, Container, VStack, useToast } from "@chakra-ui/react";
+import { ChakraProvider, Container, VStack, useToast, Box } from "@chakra-ui/react";
 import EventList from "./EventList";
 import Header from "./Header";
+import Footer from "./components/Footer";
+import ThemeToggle from "./components/ThemeToggle";
 import axios from "axios";
 import theme from "./theme";
 
@@ -33,7 +35,7 @@ export default function App() {
     fetchEvents();
   }, [toast]);
 
-  const toggleRSVP = async (eventId) => {
+  const toggleRSVP = async (eventId, email) => {
     if (loading) return;
 
     const isRSVPed = userRSVPs[eventId];
@@ -42,7 +44,8 @@ export default function App() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/events/${eventId}/headCount/${action}`
+        `http://localhost:8080/api/events/${eventId}/headCount/${action}`,
+        email ? { email } : {}
       );
       const updatedEvent = response.data;
 
@@ -53,8 +56,10 @@ export default function App() {
         setUserRSVPs({ ...userRSVPs, [eventId]: !isRSVPed });
 
         toast({
-          title: isRSVPed ? "RSVP Cancelled" : "RSVP Confirmed",
-          description: isRSVPed ? "You've cancelled your RSVP" : "You're now registered for this event",
+          title: isRSVPed ? "Registration Cancelled" : "Registration Confirmed",
+          description: isRSVPed
+            ? "You've removed yourself from this event"
+            : "You're now registered for this boxing event",
           status: "success",
           duration: 3000,
           isClosable: true,
@@ -63,7 +68,7 @@ export default function App() {
     } catch (err) {
       toast({
         title: "Error",
-        description: "Failed to update RSVP",
+        description: err.response?.data?.message || "Failed to update registration",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -75,6 +80,7 @@ export default function App() {
 
   return (
     <ChakraProvider theme={theme}>
+      <ThemeToggle />
       <Container maxW="container.xl" py={8}>
         <VStack spacing={8} align="stretch">
           <Header />
@@ -84,6 +90,7 @@ export default function App() {
             loading={loading}
             userRSVPs={userRSVPs}
           />
+          <Footer />
         </VStack>
       </Container>
     </ChakraProvider>

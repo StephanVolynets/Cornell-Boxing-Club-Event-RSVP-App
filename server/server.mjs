@@ -1,5 +1,6 @@
+// ****Built by Stephan (from SCRATCH)****
+
 import "path";
-// connect to MongoDB
 import { ObjectId } from "mongodb";
 import db from "./db/conn.mjs";
 import "dotenv/config";
@@ -83,44 +84,12 @@ app.delete("/api/events/:id/delete", async (req, res) => {
 });
 
 
-// Endpoint to: Fetch a single event DID NOT FINISH!!!
-// // Endpoint to edit an existing event
-// app.patch("/api/events/:id/edit", async (req, res) => {
-//   try {
-//     // Extract the event ID from the request parameters
-//     const eventId = new ObjectId(req.params.id);
-
-//     // Get the update data from the request body
-//     const updateData = req.body;
-
-//     // Optional: Validate the update data here
-
-//     // Update the event in the database
-//     const result = await db.collection("events").updateOne(
-//       { _id: eventId },
-//       { $set: updateData }
-//     );
-
-//     if (result.modifiedCount === 0) {
-//       return res.status(404).send({ message: "Event not found or no update made" });
-//     }
-
-//     // Fetch and return the updated event
-//     const updatedEvent = await db.collection("events").findOne({ _id: eventId });
-//     res.json(updatedEvent);
-//   } catch (err) {
-//     // Handle errors, such as invalid ObjectId format
-//     res.status(500).json({ error: err.message });
-//   }
-// });
-
-
 
 // RSVP to an event:
  // url makes sense, when id is passed we incremement headCount element (RSVP)
 app.post("/api/events/:id/headCount/rsvp", async (req, res) => {
   try {
-    // took me a WHILE to remember about mongos strict typing.
+    // Remember mongos strict typing.
     // convert to ObjectId
     const eventId = new ObjectId(req.params.id);
     // store in result to verify it was modified
@@ -186,3 +155,31 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}/`);
 });
+
+//
+// Endpoint to: Fetch a single event DID NOT FINISH!!!
+
+// app.patch("/api/events/:id/edit", async (req, res) => {
+//   try {
+//     const eventId = new ObjectId(req.params.id);
+//     const updateData = req.body;
+//     const result = await db.collection("events").updateOne(
+//       { _id: eventId },
+//       { $set: updateData }
+//     );
+
+//     if (result.modifiedCount === 0) {
+//       return res.status(404).send({ message: "Event not found or no update made" });
+//     }
+
+// Fetch and return the updated event
+
+//     const updatedEvent = await db.collection("events").findOne({ _id: eventId });
+//     res.json(updatedEvent);
+//   } catch (err) {
+
+// Handle errors, such as invalid ObjectId format
+
+//     res.status(500).json({ error: err.message });
+//   }
+// });

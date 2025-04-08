@@ -6,11 +6,12 @@ const theme = extendTheme({
     body: '"Inter", sans-serif',
   },
   styles: {
-    global: {
+    global: props => ({
       body: {
-        bg: 'gray.50',
+        bg: props.colorMode === 'dark' ? 'gray.900' : 'gray.50',
+        color: props.colorMode === 'dark' ? 'white' : 'gray.800',
       }
-    }
+    })
   },
   components: {
     Button: {

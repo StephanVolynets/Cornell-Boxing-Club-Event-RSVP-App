@@ -18,7 +18,7 @@ function Header() {
         <Box mb={4} position="relative">
           <RoughNotation
             type="underline"
-            color="#4299E1"
+            color="#e53e3e"
             strokeWidth={4}
             iterations={1}
             animationDuration={1500}
@@ -29,13 +29,13 @@ function Header() {
               display="inline-block"
               fontSize="5xl"
               fontWeight="bold"
-              bgGradient="linear(to-r, blue.500, purple.500)"
+              bgGradient="linear(to-r, red.500, black)"
               bgClip="text"
               letterSpacing="tight"
               position="relative"
               zIndex={1}
             >
-              Event RSVP App
+              Cornell Boxing Club
             </Text>
           </RoughNotation>
         </Box>
@@ -50,7 +50,7 @@ function Header() {
             position="relative"
             zIndex={1}
           >
-            By Stephan Volynets
+            Knockout Events & Training Sessions
           </Text>
         </Box>
       </RoughNotationGroup>
