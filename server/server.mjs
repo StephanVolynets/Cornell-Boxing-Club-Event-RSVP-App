@@ -6,9 +6,15 @@ import db from "./db/conn.mjs";
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const port = process.env.PORT || 8080;
 const app = express();
+
+// Get current file path
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(cors());
 app.use(express.json());
@@ -141,9 +147,24 @@ app.post("/api/events/:id/headCount/unrsvp", async (req, res) => {
   }
 });
 
-// 404 - Not Found
+// Serve static assets if in production
+if (process.env.NODE_ENV === 'production') {
+  // Set static folder
+  app.use(express.static(path.join(__dirname, '../client/build')));
+
+  // Any route that's not an API route should be handled by React
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+  });
+}
+
+// 404 - Not Found (for API routes only in production)
 app.use((req, res, next) => {
-  res.status(404).json({ message: "Resource not found" });
+  if (req.path.startsWith('/api')) {
+    res.status(404).json({ message: "Resource not found" });
+  } else {
+    next();
+  }
 });
 
 // 500 - Server Error

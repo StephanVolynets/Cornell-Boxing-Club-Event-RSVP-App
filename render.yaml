@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: cornell-boxing-app
+    env: node
+    buildCommand: npm install && npm install --prefix client && npm run build --prefix client
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB_NAME
+        value: boxing-events

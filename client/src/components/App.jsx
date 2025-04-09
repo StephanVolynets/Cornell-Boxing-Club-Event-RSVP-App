@@ -17,7 +17,7 @@ export default function App() {
     const fetchEvents = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("/api/events");
+        const response = await axios.get("http://localhost:8080/api/events");
         setEvents(response.data);
       } catch (err) {
         toast({
@@ -44,7 +44,7 @@ export default function App() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `/api/events/${eventId}/headCount/${action}`,
+        `http://localhost:8080/api/events/${eventId}/headCount/${action}`,
         email ? { email } : {}
       );
       const updatedEvent = response.data;

@@ -52,7 +52,7 @@ function Footer() {
           gap={4}
         >
           <Link
-            href="https://github.com"
+            href="https://github.com/StephanVolynets"
             isExternal
             color="gray.600"
             _hover={{ color: "red.500", transform: "translateY(-2px)" }}
@@ -61,7 +61,7 @@ function Footer() {
             <Icon as={FaGithub} boxSize={5} />
           </Link>
           <Link
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/stephan-volynets"
             isExternal
             color="gray.600"
             _hover={{ color: "red.500", transform: "translateY(-2px)" }}

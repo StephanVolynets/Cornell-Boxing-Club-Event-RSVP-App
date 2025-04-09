@@ -1,0 +1,19 @@
+{
+  "name": "cornell-boxing-club-event-app",
+  "version": "1.0.0",
+  "description": "Cornell Boxing Club Event Registration App",
+  "main": "server/server.mjs",
+  "scripts": {
+    "start": "node server/server.mjs",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
