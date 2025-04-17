@@ -52,8 +52,11 @@ const sampleEvents = [
 async function initializeDatabase() {
   if (!connectionString) {
     console.error('MONGODB_URI is not defined. Aborting initialization.');
-    return;
+    process.exit(1);
   }
+
+  console.log('Using connection string:', connectionString.replace(/mongodb\+srv:\/\/[^:]+:[^@]+@/, 'mongodb+srv://[hidden]@'));
+  console.log('Database name:', dbName);
 
   const client = new MongoClient(connectionString);
   try {
@@ -61,19 +64,35 @@ async function initializeDatabase() {
     console.log('Connected to MongoDB for initialization');
 
     const db = client.db(dbName);
-    const eventsCollection = db.collection('events');
-    const count = await eventsCollection.countDocuments();
 
-    if (count === 0) {
-      const result = await eventsCollection.insertMany(sampleEvents);
-      console.log(`Inserted ${result.insertedCount} sample events`);
-    } else {
-      console.log(`Events collection already has ${count} documents, skipping sample data`);
+    // List all collections
+    const collections = await db.listCollections().toArray();
+    console.log('Current collections:', collections.map(c => c.name));
+
+    const eventsCollection = db.collection('events');
+
+    // Drop existing collection to start fresh
+    try {
+      await eventsCollection.drop();
+      console.log('Dropped existing events collection');
+    } catch (e) {
+      console.log('No existing events collection to drop');
     }
+
+    // Insert sample events
+    const result = await eventsCollection.insertMany(sampleEvents);
+    console.log(`Successfully inserted ${result.insertedCount} sample events`);
+
+    // Verify the insertion
+    const insertedEvents = await eventsCollection.find({}).toArray();
+    console.log('Inserted events:', insertedEvents.map(e => ({ name: e.name, _id: e._id })));
+
   } catch (err) {
     console.error('Error during database initialization:', err);
+    process.exit(1);
   } finally {
     await client.close();
+    console.log('Database initialization complete');
   }
 }
 

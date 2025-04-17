@@ -18,16 +18,21 @@ import {
   AccordionPanel,
   AccordionIcon,
   Flex,
-  Link
+  Link,
+  Spinner
 } from '@chakra-ui/react';
-import axios from 'axios';
 import { Link as RouterLink } from 'react-router-dom';
+import api from './utils/api';
 
 const DebugPage = () => {
   const [healthResult, setHealthResult] = useState(null);
   const [eventsResult, setEventsResult] = useState(null);
   const [authResult, setAuthResult] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState({
+    health: false,
+    events: false,
+    auth: false
+  });
   const [error, setError] = useState(null);
   const toast = useToast();
 
@@ -36,11 +41,25 @@ const DebugPage = () => {
   const headingColor = useColorModeValue('red.600', 'red.400');
   const codeBg = useColorModeValue('gray.50', 'gray.700');
 
+  const handleApiError = (err, operation) => {
+    console.error(`${operation} failed:`, err);
+    const errorMessage = err.response?.data?.message || err.message || `${operation} failed`;
+    setError(errorMessage);
+    toast({
+      title: 'Error',
+      description: errorMessage,
+      status: 'error',
+      duration: 5000,
+      isClosable: true,
+    });
+  };
+
   const checkHealth = async () => {
-    setLoading(true);
+    setLoading(prev => ({ ...prev, health: true }));
     try {
-      const response = await axios.get('http://localhost:8080/api/health');
+      const response = await api.get('/health');
       setHealthResult(response.data);
+      setError(null);
       toast({
         title: 'Success',
         description: 'Health check completed',
@@ -49,24 +68,18 @@ const DebugPage = () => {
         isClosable: true,
       });
     } catch (err) {
-      setError(`Health check failed: ${err.message}`);
-      toast({
-        title: 'Error',
-        description: `Health check failed: ${err.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      handleApiError(err, 'Health check');
     } finally {
-      setLoading(false);
+      setLoading(prev => ({ ...prev, health: false }));
     }
   };
 
   const checkEvents = async () => {
-    setLoading(true);
+    setLoading(prev => ({ ...prev, events: true }));
     try {
-      const response = await axios.get('http://localhost:8080/api/debug/events');
+      const response = await api.get('/debug/events');
       setEventsResult(response.data);
+      setError(null);
       toast({
         title: 'Success',
         description: `Found ${response.data.count} events`,
@@ -75,26 +88,18 @@ const DebugPage = () => {
         isClosable: true,
       });
     } catch (err) {
-      setError(`Events check failed: ${err.message}`);
-      toast({
-        title: 'Error',
-        description: `Events check failed: ${err.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      handleApiError(err, 'Events check');
     } finally {
-      setLoading(false);
+      setLoading(prev => ({ ...prev, events: false }));
     }
   };
 
   const checkAuth = async () => {
-    setLoading(true);
+    setLoading(prev => ({ ...prev, auth: true }));
     try {
-      const response = await axios.get('http://localhost:8080/api/debug/auth-test', {
-        withCredentials: true
-      });
+      const response = await api.get('/debug/auth-test');
       setAuthResult(response.data);
+      setError(null);
       toast({
         title: 'Success',
         description: 'Auth check completed',
@@ -103,16 +108,9 @@ const DebugPage = () => {
         isClosable: true,
       });
     } catch (err) {
-      setError(`Auth check failed: ${err.message}`);
-      toast({
-        title: 'Error',
-        description: `Auth check failed: ${err.message}`,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      handleApiError(err, 'Auth check');
     } finally {
-      setLoading(false);
+      setLoading(prev => ({ ...prev, auth: false }));
     }
   };
 
@@ -138,7 +136,7 @@ const DebugPage = () => {
             <Button
               colorScheme="blue"
               onClick={checkHealth}
-              isLoading={loading}
+              isLoading={loading.health}
               mr={4}
             >
               Check Server Health
@@ -147,7 +145,7 @@ const DebugPage = () => {
             <Button
               colorScheme="green"
               onClick={checkEvents}
-              isLoading={loading}
+              isLoading={loading.events}
               mr={4}
             >
               Check Events
@@ -156,7 +154,7 @@ const DebugPage = () => {
             <Button
               colorScheme="purple"
               onClick={checkAuth}
-              isLoading={loading}
+              isLoading={loading.auth}
             >
               Check Auth
             </Button>
