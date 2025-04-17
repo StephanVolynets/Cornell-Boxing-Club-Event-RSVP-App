@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Cornell Boxing Club Event Registration App",
   "main": "server/server.mjs",
+  "type": "module",
   "scripts": {
     "start": "node server/server.mjs",
     "server": "cd server && npm run dev",
@@ -12,7 +13,8 @@
     "install-server": "cd server && npm install",
     "build-client": "cd client && npm run build",
     "install": "npm run install-server && npm run install-client",
-    "build": "npm run build-client"
+    "build": "npm run build-client",
+    "init-db": "node server/init-db.js"
   },
   "engines": {
     "node": ">=14.0.0"
