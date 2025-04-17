@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.mjs",
     "dev": "nodemon server.mjs",
-    "postinstall": "cd client && npm install && npm run build"
+    "postinstall": "cd ../client && npm install && npm run build"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
