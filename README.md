@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 # Cornell Boxing Club Event Registration App
 
 > ***A Modern, Responsive React Application for managing Cornell Boxing Club event registrations with real-time updates and an intuitive user interface.***
 
 <h1 align="center">Snapshot</h1>
+=======
+# Cornell Boxing Club Event Registration App 
+> Created by **Stephan Volynets**
+>> A _modern, responsive full stack single page application_ for managing Cornell Boxing Club member event registrations, with real time updates and an intuitive user interface.
+>>> This was my final project for [INFO 2310](https://classes.cornell.edu/browse/roster/SP25/class/INFO/2310).   Special Thanks to [Professor Kyle Harms](https://kharms.infosci.cornell.edu/index.html) for teaching me Client Side Rendering & all things HTTP communication! 
+
+>>>>>>> 27da3e054b59e2107b7a2b03360614bc8ab5bb59
 
 <p>
    <img src="https://github.com/user-attachments/assets/9db0ee41-016a-4a71-880c-90c4af1feb38" alt="Desktop Browser" style="width:100% height="700">
@@ -19,7 +27,11 @@
 This application provides a seamless boxing event management experience with features including:
 
 - 🥊 Dynamic boxing event listing with consistent card height layout
+<<<<<<< HEAD
 - 🔄 Real-time registration updates
+=======
+- 🔄 Real time registration updates
+>>>>>>> 27da3e054b59e2107b7a2b03360614bc8ab5bb59
 - 💫 Smooth animations and transitions
 - 🌙 Dark/Light theme toggle
 - 🎨 Cornell Boxing themed UI with Chakra UI
@@ -175,7 +187,11 @@ useEffect(() => {
 ### Design System
 - **Theme**: Custom Chakra UI theme with Cornell Boxing Club color scheme
 - **Colors**: Red, black, and blue accents with dark/light mode support
+<<<<<<< HEAD
 - **Components**: Boxing-themed icons and consistent card layout
+=======
+- **Components**: Boxing themed icons and consistent card layout
+>>>>>>> 27da3e054b59e2107b7a2b03360614bc8ab5bb59
 - **Typography**: Enhanced readability with optimized font styles
 - **Animations**: Smooth transitions and hover effects
 
@@ -183,8 +199,13 @@ useEffect(() => {
 
 1. **Fixed-Height Card Layout**
    - Consistent 450px height cards regardless of content
+<<<<<<< HEAD
    - Well-structured content areas with appropriate spacing
    - Boxing-themed icons for better visual hierarchy
+=======
+   - Well structured content areas with appropriate spacing
+   - Boxing themed icons for better visual hierarchy
+>>>>>>> 27da3e054b59e2107b7a2b03360614bc8ab5bb59
 
 2. **Dark Mode Integration**
    - Complete theme support with appropriate color shifts
@@ -287,6 +308,7 @@ EVENT-RSVP-APP-MERN-2/
     └── server.mjs          # Express API routes and server configuration
 ```
 
+<<<<<<< HEAD
 ## Deployment
 
 This application can be deployed using several cloud platforms:
@@ -339,6 +361,8 @@ git push heroku main
 - Set up proper error logging and monitoring
 - Configure proper CORS settings for production
 
+=======
+>>>>>>> 27da3e054b59e2107b7a2b03360614bc8ab5bb59
 ## Contributing
 
 1. Fork the repository
@@ -346,3 +370,8 @@ git push heroku main
 3. Commit your changes
 4. Push to the branch
 5. Create a Pull Request
+<<<<<<< HEAD
+=======
+
+> Special Thanks to [Professor Kyle Harms](https://kharms.infosci.cornell.edu/index.html) for teaching me client side rendering & all things HTTP communication!
+>>>>>>> 27da3e054b59e2107b7a2b03360614bc8ab5bb59
