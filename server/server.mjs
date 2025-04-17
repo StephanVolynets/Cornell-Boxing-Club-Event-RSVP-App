@@ -24,7 +24,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key_for_dev";
 
 // Fix CORS configuration
 app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:8080"],
+  origin: ["http://localhost:3000", "http://localhost:8080", process.env.FRONTEND_URL || "*"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
@@ -414,11 +414,13 @@ app.post("/api/events/:id/headCount/unrsvp", async (req, res) => {
 // Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {
   // Set static folder
-  app.use(express.static(path.join(__dirname, '../client/build')));
+  const clientBuildPath = path.join(__dirname, '../client/build');
+  console.log(`Serving static files from: ${clientBuildPath}`);
+  app.use(express.static(clientBuildPath));
 
   // Any route that's not an API route should be handled by React
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+    res.sendFile(path.resolve(clientBuildPath, 'index.html'));
   });
 }
 

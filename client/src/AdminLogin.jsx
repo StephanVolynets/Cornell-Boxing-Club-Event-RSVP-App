@@ -21,6 +21,7 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon, ArrowBackIcon } from '@chakra-ui/icons';
+import api from './utils/api';
 import axios from 'axios';
 import { useToast } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
@@ -48,7 +49,7 @@ const AdminLogin = ({ onLoginSuccess }) => {
 
   const testServer = async () => {
     try {
-      const healthCheck = await axios.get('http://localhost:8080/api/health');
+      const healthCheck = await api.get('/health');
       console.log('Server health:', healthCheck.data);
       toast({
         title: 'Server is online',
@@ -87,8 +88,8 @@ const AdminLogin = ({ onLoginSuccess }) => {
       await testServer();
 
       // Configure axios to send credentials (cookies)
-      const response = await axios.post(
-        'http://localhost:8080/api/admin/login',
+      const response = await api.post(
+        '/admin/login',
         { username, password },
         {
           withCredentials: true,
@@ -118,7 +119,7 @@ const AdminLogin = ({ onLoginSuccess }) => {
 
       // Try the auth test endpoint
       try {
-        const authTest = await axios.get('http://localhost:8080/api/debug/auth-test', {
+        const authTest = await api.get('/debug/auth-test', {
           withCredentials: true
         });
         console.log('Auth test response:', authTest.data);

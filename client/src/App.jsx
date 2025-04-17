@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import ThemeToggle from "./components/ThemeToggle";
 import AdminPanel from "./AdminPanel";
 import DebugPage from "./DebugPage";
+import api from "./utils/api";
 import axios from "axios";
 import theme from "./theme";
 
@@ -24,7 +25,7 @@ const MainApp = () => {
     const fetchEvents = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:8080/api/events");
+        const response = await api.get("/events");
         setEvents(response.data);
 
         // Initialize RSVP status if user email is stored
@@ -127,8 +128,8 @@ const MainApp = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(
-        `http://localhost:8080/api/events/${eventId}/headCount/${action}`,
+      const response = await api.post(
+        `/events/${eventId}/headCount/${action}`,
         { email: emailToUse }
       );
       const updatedEvent = response.data;

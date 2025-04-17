@@ -218,7 +218,7 @@ SESSION_SECRET=your_session_secret
 1. Start the server
 ```bash
 cd server
-npm start
+node server.mjs
 ```
 
 2. In a new terminal, start the client
@@ -232,12 +232,10 @@ npm start
 - Backend API: http://localhost:8080
 - Admin Panel: http://localhost:3000/admin (Credentials: Coach/monkey)
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Credits
 
+- Professor Kyle Harms for teaching me MERN, user auth, and best practices
 - Created for Cornell Boxing Club
 - UI components built with Chakra UI
 - Animations powered by Framer Motion
@@ -245,4 +243,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Contact
 
-For questions or support, please contact the development team at [svv6@cornell.edu].
+For questions or support, please contact the me at [svv6@cornell.edu].

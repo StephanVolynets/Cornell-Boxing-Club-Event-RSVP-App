@@ -1,13 +1,35 @@
 services:
+  # Backend API service
   - type: web
-    name: cornell-boxing-app
+    name: cornell-boxing-api
     env: node
-    buildCommand: npm install && npm install --prefix client && npm run build --prefix client
+    buildCommand: npm install && npm run install-server
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: 8080
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        fromService:
+          name: cornell-boxing-frontend
+          type: web
+          property: url
       - key: MONGODB_URI
-        sync: false
-      - key: MONGODB_DB_NAME
-        value: boxing-events
+        sync: false # User will need to add this manually in Render dashboard
+
+  # Frontend static site
+  - type: web
+    name: cornell-boxing-frontend
+    env: static
+    buildCommand: npm install && npm run build-client
+    staticPublishPath: ./client/build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_ENV
+        value: production

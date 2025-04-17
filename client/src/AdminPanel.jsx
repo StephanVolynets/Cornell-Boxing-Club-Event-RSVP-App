@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Spinner, Center, useToast } from '@chakra-ui/react';
 import AdminLogin from './AdminLogin';
 import AdminDashboard from './AdminDashboard';
+import api from './utils/api';
 import axios from 'axios';
 
 const AdminPanel = () => {
@@ -14,7 +15,7 @@ const AdminPanel = () => {
     const checkAuth = async () => {
       try {
         console.log('Checking authentication status...');
-        const response = await axios.get('http://localhost:8080/api/admin/check-auth', {
+        const response = await api.get('/admin/check-auth', {
           withCredentials: true,
           headers: {
             'Accept': 'application/json',
@@ -36,7 +37,7 @@ const AdminPanel = () => {
 
         // Try the health endpoint to verify server connectivity
         try {
-          const healthCheck = await axios.get('http://localhost:8080/api/health');
+          const healthCheck = await api.get('/health');
           console.log('Health check response:', healthCheck.data);
         } catch (healthError) {
           console.error('Health check failed:', healthError.message);

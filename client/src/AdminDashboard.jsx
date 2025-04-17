@@ -62,7 +62,7 @@ import {
   SearchIcon,
   RepeatIcon
 } from '@chakra-ui/icons';
-import axios from 'axios';
+import api from './utils/api';
 
 const AdminDashboard = ({ user, onLogout }) => {
   const [events, setEvents] = useState([]);
@@ -98,12 +98,6 @@ const AdminDashboard = ({ user, onLogout }) => {
   const textColor = useColorModeValue('gray.700', 'gray.300');
   const tableHeaderBg = useColorModeValue('gray.50', 'gray.700');
   const emptyStateColor = useColorModeValue('gray.500', 'gray.400');
-
-  // Setup axios instance with credentials
-  const api = axios.create({
-    baseURL: 'http://localhost:8080',
-    withCredentials: true
-  });
 
   // Apply search filter
   useEffect(() => {
@@ -162,7 +156,7 @@ const AdminDashboard = ({ user, onLogout }) => {
   // Check authentication status
   const checkAuth = async () => {
     try {
-      const response = await api.get('/api/admin/check-auth');
+      const response = await api.get('/admin/check-auth');
       setIsAuthenticated(response.data.isAuthenticated);
       return true;
     } catch (error) {
@@ -184,18 +178,18 @@ const AdminDashboard = ({ user, onLogout }) => {
       if (isAuth) {
         // Try the admin endpoint first
         try {
-          const response = await api.get('/api/admin/events');
+          const response = await api.get('/admin/events');
           console.log('Admin events response:', response.data);
           setEvents(response.data);
         } catch (adminError) {
           console.error('Admin endpoint failed:', adminError);
           // Fall back to public endpoint
-          const publicResponse = await axios.get('http://localhost:8080/api/events');
+          const publicResponse = await api.get('/events');
           setEvents(publicResponse.data);
         }
       } else {
         // If not authenticated, use the public endpoint
-        const response = await axios.get('http://localhost:8080/api/events');
+        const response = await api.get('/events');
         console.log('Public events response:', response.data);
         setEvents(response.data);
 
@@ -234,7 +228,7 @@ const AdminDashboard = ({ user, onLogout }) => {
       console.log('Normalized ID:', normalizedId);
 
       // Use the public endpoint for now, since we can't rely on auth working
-      const event = await axios.get(`http://localhost:8080/api/events/${normalizedId}`);
+      const event = await api.get(`/events/${normalizedId}`);
 
       if (!event.data) {
         throw new Error('Event not found');
@@ -317,8 +311,8 @@ const AdminDashboard = ({ user, onLogout }) => {
 
       // Always use the public endpoint since we've confirmed it works
       console.log(`Sending to public endpoint: /api/events/${normalizedId}`);
-      const response = await axios.put(
-        `http://localhost:8080/api/events/${normalizedId}`,
+      const response = await api.put(
+        `/events/${normalizedId}`,
         updateData
       );
 
@@ -376,8 +370,8 @@ const AdminDashboard = ({ user, onLogout }) => {
       console.log(`Removing RSVP using: /api/events/${normalizedId}/headCount/unrsvp with email ${selectedEmail}`);
 
       // Use the unrsvp endpoint
-      const response = await axios.post(
-        `http://localhost:8080/api/events/${normalizedId}/headCount/unrsvp`,
+      const response = await api.post(
+        `/events/${normalizedId}/headCount/unrsvp`,
         { email: selectedEmail }
       );
 
@@ -429,7 +423,7 @@ const AdminDashboard = ({ user, onLogout }) => {
   // Confirm logout
   const handleLogout = async () => {
     try {
-      await api.post('/api/admin/logout');
+      await api.post('/admin/logout');
       setIsAuthenticated(false);
       onLogout();
 
@@ -464,8 +458,8 @@ const AdminDashboard = ({ user, onLogout }) => {
       console.log('Creating new event:', newEvent);
 
       // Send the data to the API
-      const response = await axios.post(
-        'http://localhost:8080/api/events/create',
+      const response = await api.post(
+        '/events/create',
         newEvent
       );
 
@@ -521,7 +515,7 @@ const AdminDashboard = ({ user, onLogout }) => {
       console.log('Deleting event:', normalizedId);
 
       // Send delete request to API
-      await axios.delete(`http://localhost:8080/api/events/${normalizedId}/delete`);
+      await api.delete(`/events/${normalizedId}/delete`);
 
       // Remove the event from the events list
       setEvents(events.filter(event => normalizeId(event._id) !== normalizedId));
