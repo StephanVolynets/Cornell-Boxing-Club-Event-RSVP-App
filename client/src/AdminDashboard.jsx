@@ -175,23 +175,24 @@ const AdminDashboard = ({ user, onLogout }) => {
       // First check authentication
       const isAuth = await checkAuth();
 
+      let eventsData = [];
       if (isAuth) {
         // Try the admin endpoint first
         try {
           const response = await api.get('/admin/events');
           console.log('Admin events response:', response.data);
-          setEvents(response.data);
+          eventsData = Array.isArray(response.data) ? response.data : [];
         } catch (adminError) {
           console.error('Admin endpoint failed:', adminError);
           // Fall back to public endpoint
           const publicResponse = await api.get('/events');
-          setEvents(publicResponse.data);
+          eventsData = Array.isArray(publicResponse.data) ? publicResponse.data : [];
         }
       } else {
         // If not authenticated, use the public endpoint
         const response = await api.get('/events');
         console.log('Public events response:', response.data);
-        setEvents(response.data);
+        eventsData = Array.isArray(response.data) ? response.data : [];
 
         toast({
           title: 'Notice',
@@ -201,9 +202,11 @@ const AdminDashboard = ({ user, onLogout }) => {
           isClosable: true,
         });
       }
+      setEvents(eventsData);
     } catch (error) {
       console.error('Error fetching events:', error);
       console.log('Error details:', error.response?.data || error.message);
+      setEvents([]); // Set empty array on error
 
       toast({
         title: 'Error',

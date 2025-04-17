@@ -27,8 +27,6 @@ console.log('Database name:', dbName);
 
 // Create a new MongoClient
 const client = new MongoClient(connectionString, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   maxPoolSize: 10
 });
 
