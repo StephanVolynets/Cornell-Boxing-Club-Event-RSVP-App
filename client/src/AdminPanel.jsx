@@ -80,7 +80,7 @@ const AdminPanel = () => {
   }
 
   return (
-    <Box minH="100vh">
+    <Box minH="100vh" px={{ base: 0, md: 4 }} py={{ base: 0, md: 4 }} pt={{ base: 10, md: 0 }}>
       {user ? (
         <AdminDashboard user={user} onLogout={handleLogout} />
       ) : (

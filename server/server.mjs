@@ -1,4 +1,4 @@
-// ****Built by Stephan (from SCRATCH)****
+// ! Built by Stephan (from SCRATCH)!
 
 import "path";
 import { ObjectId } from "mongodb";
@@ -70,7 +70,7 @@ app.post("/api/admin/login", async (req, res) => {
 
     // For this implementation, we'll use hardcoded credentials
     // In a production app, you would store these securely in a database with hashed passwords
-    if (username === "coach" && password === "monkey") {
+    if (username === "Coach" && password === "monkey") {
       // Create JWT token
       const token = jwt.sign(
         { username, role: "admin" },
@@ -175,6 +175,31 @@ app.get("/api/events", async (req, res) => {
   }
 });
 
+// Fetch a single event by ID
+app.get("/api/events/:id", async (req, res) => {
+  try {
+    // Convert string ID to MongoDB ObjectId
+    let eventId;
+    try {
+      eventId = new ObjectId(req.params.id);
+    } catch (idError) {
+      console.error("Invalid ObjectId format:", req.params.id);
+      return res.status(400).json({ message: "Invalid event ID format" });
+    }
+
+    const event = await db.collection("events").findOne({ _id: eventId });
+
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    res.json(event);
+  } catch (err) {
+    console.error("Error fetching single event:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Endpoint to create a new event
 app.post("/api/events/create", async (req, res) => {
   const { name, description, date, location, headCount } = req.body;
@@ -205,7 +230,6 @@ app.post("/api/events/create", async (req, res) => {
   }
 });
 
-
 // Endpoint to: Delete an event
 app.delete("/api/events/:id/delete", async (req, res) => {
   try {
@@ -222,10 +246,65 @@ app.delete("/api/events/:id/delete", async (req, res) => {
   }
 });
 
+// Update an event (public endpoint)
+app.put("/api/events/:id", async (req, res) => {
+  try {
+    console.log("Public: Updating event ID:", req.params.id);
+    console.log("Public: Update data:", req.body);
 
+    // Important: Validate the ID format first
+    let eventId;
+    try {
+      eventId = new ObjectId(req.params.id);
+      console.log("Public: Converted to ObjectId:", eventId);
+    } catch (idError) {
+      console.error("Public: Invalid ObjectId format:", req.params.id, idError);
+      return res.status(400).json({ message: "Invalid event ID format" });
+    }
+
+    const { name, description, date, location } = req.body;
+    console.log("Public: Extracted fields:", { name, description, date, location });
+
+    if (!name || !description || !date || !location) {
+      console.log("Public: Missing required fields");
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Check if the event exists first
+    const eventExists = await db.collection("events").findOne({ _id: eventId });
+    if (!eventExists) {
+      console.log("Public: Event not found for update:", eventId);
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    const result = await db.collection("events").updateOne(
+      { _id: eventId },
+      { $set: {
+        name,
+        description,
+        date,
+        location
+      }}
+    );
+
+    console.log("Public: Update result:", result);
+
+    if (result.matchedCount === 0) {
+      console.log("Public: No event matched the ID:", eventId);
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    const updatedEvent = await db.collection("events").findOne({ _id: eventId });
+    console.log("Public: Updated event:", updatedEvent);
+    res.json(updatedEvent);
+  } catch (err) {
+    console.error("Public: Error updating event:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // RSVP to an event:
- // url makes sense, when id is passed we incremement headCount element (RSVP)
+// url makes sense, when id is passed we incremement headCount element (RSVP)
 app.post("/api/events/:id/headCount/rsvp", async (req, res) => {
   try {
     // Remember mongos strict typing.
@@ -281,8 +360,8 @@ app.post("/api/events/:id/headCount/rsvp", async (req, res) => {
 });
 
 // UN-RSVP to an event:
-  // Same logic as above but decrement with -1, kind of redundant but,
-  // I wanted to make sure I understood the logic.
+// Same logic as above but decrement with -1, kind of redundant but,
+// I wanted to make sure I understood the logic.
 app.post("/api/events/:id/headCount/unrsvp", async (req, res) => {
   try {
     const eventId = new ObjectId(req.params.id);
@@ -498,22 +577,32 @@ app.get("/api/debug/events/:id/rsvps", async (req, res) => {
 // Update an event
 app.put("/api/admin/events/:id", authenticateAdmin, async (req, res) => {
   try {
-    console.log("Updating event ID:", req.params.id);
-    console.log("Update data:", req.body);
+    console.log("Admin: Updating event ID:", req.params.id);
+    console.log("Admin: Update data:", req.body);
 
     // Important: Validate the ID format first
     let eventId;
     try {
       eventId = new ObjectId(req.params.id);
+      console.log("Admin: Converted to ObjectId:", eventId);
     } catch (idError) {
-      console.error("Invalid ObjectId format:", req.params.id);
+      console.error("Admin: Invalid ObjectId format:", req.params.id, idError);
       return res.status(400).json({ message: "Invalid event ID format" });
     }
 
     const { name, description, date, location } = req.body;
+    console.log("Admin: Extracted fields:", { name, description, date, location });
 
     if (!name || !description || !date || !location) {
+      console.log("Admin: Missing required fields");
       return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Check if the event exists first
+    const eventExists = await db.collection("events").findOne({ _id: eventId });
+    if (!eventExists) {
+      console.log("Admin: Event not found for update:", eventId);
+      return res.status(404).json({ message: "Event not found" });
     }
 
     const result = await db.collection("events").updateOne(
@@ -526,17 +615,18 @@ app.put("/api/admin/events/:id", authenticateAdmin, async (req, res) => {
       }}
     );
 
-    console.log("Update result:", result);
+    console.log("Admin: Update result:", result);
 
     if (result.matchedCount === 0) {
+      console.log("Admin: No event matched the ID:", eventId);
       return res.status(404).json({ message: "Event not found" });
     }
 
     const updatedEvent = await db.collection("events").findOne({ _id: eventId });
-    console.log("Updated event:", updatedEvent);
+    console.log("Admin: Updated event:", updatedEvent);
     res.json(updatedEvent);
   } catch (err) {
-    console.error("Error updating event:", err);
+    console.error("Admin: Error updating event:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -551,15 +641,25 @@ app.put("/api/debug/events/:id", async (req, res) => {
     let eventId;
     try {
       eventId = new ObjectId(req.params.id);
+      console.log("Debug: Converted to ObjectId:", eventId);
     } catch (idError) {
-      console.error("Debug: Invalid ObjectId format:", req.params.id);
+      console.error("Debug: Invalid ObjectId format:", req.params.id, idError);
       return res.status(400).json({ message: "Invalid event ID format" });
     }
 
     const { name, description, date, location } = req.body;
+    console.log("Debug: Extracted fields:", { name, description, date, location });
 
     if (!name || !description || !date || !location) {
+      console.log("Debug: Missing required fields");
       return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Check if the event exists first
+    const eventExists = await db.collection("events").findOne({ _id: eventId });
+    if (!eventExists) {
+      console.log("Debug: Event not found for update:", eventId);
+      return res.status(404).json({ message: "Event not found" });
     }
 
     const result = await db.collection("events").updateOne(
@@ -575,6 +675,7 @@ app.put("/api/debug/events/:id", async (req, res) => {
     console.log("Debug: Update result:", result);
 
     if (result.matchedCount === 0) {
+      console.log("Debug: No event matched the ID:", eventId);
       return res.status(404).json({ message: "Event not found" });
     }
 

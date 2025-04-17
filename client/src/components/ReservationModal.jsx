@@ -49,12 +49,14 @@ const ReservationModal = ({ isOpen, onClose, onSubmit, initialEmail = "", isChan
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered size={{ base: "sm", md: "md" }}>
             <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(5px)" />
-            <ModalContent bg={modalBg} boxShadow="xl">
-                <ModalHeader color={headerColor}>{isChangingEmail ? "Change Email" : "Confirm Reservation"}</ModalHeader>
+            <ModalContent bg={modalBg} boxShadow="xl" mx={{ base: 4, md: "auto" }}>
+                <ModalHeader color={headerColor} fontSize={{ base: "lg", md: "xl" }}>
+                    {isChangingEmail ? "Change Email" : "Confirm Reservation"}
+                </ModalHeader>
                 <ModalCloseButton />
-                <ModalBody>
+                <ModalBody pb={{ base: 4, md: 6 }}>
                     <FormControl isInvalid={Boolean(error)}>
                         <FormLabel color={textColor}>Enter your Cornell email</FormLabel>
                         <Input
@@ -67,15 +69,17 @@ const ReservationModal = ({ isOpen, onClose, onSubmit, initialEmail = "", isChan
                             color={textColor}
                             _placeholder={{ color: placeholderColor }}
                             _focus={{ borderColor: inputFocusBorder }}
+                            size={{ base: "md", md: "lg" }}
+                            height={{ base: "40px", md: "48px" }}
                         />
                         {error && <FormErrorMessage>{error}</FormErrorMessage>}
                     </FormControl>
                 </ModalBody>
-                <ModalFooter>
-                    <Button variant="ghost" mr={3} onClick={onClose}>
+                <ModalFooter pt={{ base: 2, md: 4 }}>
+                    <Button variant="ghost" mr={3} onClick={onClose} size={{ base: "sm", md: "md" }}>
                         Cancel
                     </Button>
-                    <Button colorScheme="blue" onClick={handleSubmit}>
+                    <Button colorScheme="blue" onClick={handleSubmit} size={{ base: "sm", md: "md" }}>
                         {isChangingEmail ? "Update Email" : "Reserve"}
                     </Button>
                 </ModalFooter>

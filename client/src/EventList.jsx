@@ -1,10 +1,109 @@
 import React from 'react';
-import { SimpleGrid, Box, Container } from '@chakra-ui/react';
+import { SimpleGrid, Box, Container, Heading, Text, Flex, Icon, useColorModeValue } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import EventCard from './EventCard';
 import LoadingSkeleton from './LoadingSkeleton';
+import { GiBoxingGlove } from 'react-icons/gi';
 
 const MotionBox = motion(Box);
+const MotionIcon = motion(Icon);
+
+// Header section with boxing icons
+const EventsHeader = () => {
+  const bgColor = useColorModeValue("red.50", "rgba(229, 62, 62, 0.1)");
+  const borderColor = useColorModeValue("red.100", "red.900");
+  const textColor = useColorModeValue("gray.700", "white");
+
+  // Animation variants for floating motion
+  const floatAnimation = {
+    animate: {
+      y: [0, -5, 0],
+      transition: {
+        duration: 2,
+        repeat: Infinity,
+        repeatType: "reverse"
+      }
+    }
+  };
+
+  return (
+    <Box
+      p={4}
+      mb={4}
+      bg={bgColor}
+      borderRadius="lg"
+      borderWidth="1px"
+      borderColor={borderColor}
+    >
+      <Flex
+        align="center"
+        justify="center"
+        wrap="nowrap"
+        width="100%"
+      >
+        <MotionIcon
+          as={GiBoxingGlove}
+          color="red.500"
+          mr={{ base: 1, sm: 2, md: 3 }}
+          transform="rotate(-15deg)"
+          boxSize={{ base: "25px", sm: "30px", md: "35px" }}
+          flexShrink={0}
+          initial={{ rotate: -15 }}
+          animate={{
+            rotate: [-15, -5, -15],
+            y: [0, -5, 0]
+          }}
+          transition={{
+            duration: 2,
+            ease: "easeInOut",
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+        <Heading
+          size={{ base: "md", sm: "lg" }}
+          fontWeight="extrabold"
+          textAlign="center"
+          color={textColor}
+          px={{ base: 0, sm: 1 }}
+          flexShrink={1}
+          isTruncated
+        >
+          Upcoming Boxing Events
+        </Heading>
+        <MotionIcon
+          as={GiBoxingGlove}
+          color="red.500"
+          ml={{ base: 1, sm: 2, md: 3 }}
+          transform="scaleX(-1)"
+          boxSize={{ base: "25px", sm: "30px", md: "35px" }}
+          flexShrink={0}
+          initial={{ rotate: -15, scaleX: -1 }}
+          animate={{
+            rotate: [-15, -5, -15],
+            y: [0, -5, 0]
+          }}
+          transition={{
+            duration: 2,
+            ease: "easeInOut",
+            repeat: Infinity,
+            repeatType: "reverse",
+            delay: 0.5
+          }}
+        />
+      </Flex>
+      <Text
+        textAlign="center"
+        fontSize={{ base: "xs", sm: "sm", md: "md" }}
+        mt={1}
+        color={textColor}
+        px={{ base: 2, md: 4 }}
+      >
+        Register now for Cornell Boxing Club's exclusive training sessions and workshops
+      </Text>
+    </Box>
+  );
+};
 
 const container = {
   hidden: { opacity: 0 },
@@ -29,11 +128,16 @@ function EventList({ events, onRSVPToggle, loading, userRSVPs, userEmail, emails
   const fillerItems = itemsNeeded === maxColumns ? [] : Array(itemsNeeded).fill(null);
 
   return (
-    <Container maxW="container.xl" px={0}>
+    <Container maxW="container.xl" px={0} position="relative">
+      {/* Header with simplified design */}
+      <EventsHeader />
+
       <MotionBox
         variants={container}
         initial="hidden"
         animate="show"
+        position="relative"
+        zIndex={1}
       >
         <SimpleGrid
           columns={columns}
@@ -48,7 +152,6 @@ function EventList({ events, onRSVPToggle, loading, userRSVPs, userEmail, emails
                 <MotionBox
                   key={event._id}
                   variants={item}
-                  whileHover={{ y: -8 }}
                   transition={{ duration: 0.2 }}
                 >
                   <EventCard

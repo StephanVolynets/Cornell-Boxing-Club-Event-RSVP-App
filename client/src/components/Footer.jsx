@@ -14,8 +14,8 @@ function Footer() {
   return (
     <MotionBox
       as="footer"
-      py={6}
-      mt={10}
+      py={3}
+      mt={4}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -26,10 +26,10 @@ function Footer() {
         align="center"
         borderTop="1px"
         borderColor="gray.200"
-        pt={6}
+        pt={3}
       >
         <Text
-          fontSize="sm"
+          fontSize="xs"
           color="gray.600"
           textAlign="center"
           fontWeight="medium"
@@ -50,9 +50,9 @@ function Footer() {
         </Text>
 
         <Flex
-          ml={{ base: 0, md: 6 }}
-          mt={{ base: 3, md: 0 }}
-          gap={4}
+          ml={{ base: 0, md: 4 }}
+          mt={{ base: 2, md: 0 }}
+          gap={3}
         >
           <Link
             href="https://github.com/StephanVolynets"
@@ -61,7 +61,7 @@ function Footer() {
             _hover={{ color: "red.500", transform: "translateY(-2px)" }}
             transition="all 0.2s"
           >
-            <Icon as={FaGithub} boxSize={5} />
+            <Icon as={FaGithub} boxSize={4} />
           </Link>
           <Link
             href="https://www.linkedin.com/in/stephan-volynets"
@@ -70,13 +70,13 @@ function Footer() {
             _hover={{ color: "red.500", transform: "translateY(-2px)" }}
             transition="all 0.2s"
           >
-            <Icon as={FaLinkedin} boxSize={5} />
+            <Icon as={FaLinkedin} boxSize={4} />
           </Link>
         </Flex>
       </Flex>
 
       {/* Admin Link */}
-      <Flex justify="center" mt={4} gap={4}>
+      <Flex justify="center" mt={2} gap={3}>
         <Link
           as={RouterLink}
           to="/admin"

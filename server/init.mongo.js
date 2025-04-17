@@ -22,7 +22,7 @@ db.events.insertMany([
   },
   {
     name: "Fitness & Conditioning Bootcamp",
-    description: "High-intensity conditioning workout tailored for boxing performance.",
+    description: "High intensity conditioning workout tailored for boxing performance.",
     date: "2025-06-05",
     location: "Cornell Sports Fitness Room",
     headCount: 0

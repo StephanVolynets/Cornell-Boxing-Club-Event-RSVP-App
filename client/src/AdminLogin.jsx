@@ -18,10 +18,12 @@ import {
   IconButton,
   Center,
   Flex,
+  HStack,
 } from '@chakra-ui/react';
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { ViewIcon, ViewOffIcon, ArrowBackIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 import { useToast } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 
 const AdminLogin = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState('');
@@ -129,23 +131,37 @@ const AdminLogin = ({ onLoginSuccess }) => {
   };
 
   return (
-    <Container maxW="md" py={12}>
+    <Container maxW="md" py={{ base: 6, md: 12 }} px={{ base: 4, md: 8 }} pt={{ base: 16, md: 12 }}>
       <Box
         bg={bgColor}
-        p={8}
+        p={{ base: 5, md: 8 }}
         borderWidth="1px"
         borderRadius="lg"
         borderColor={borderColor}
         boxShadow="lg"
       >
-        <VStack spacing={6} align="stretch">
+        <VStack spacing={{ base: 4, md: 6 }} align="stretch">
+          <Flex justify="space-between" align="center" width="100%">
+            <Link to="/">
+              <Button
+                leftIcon={<ArrowBackIcon />}
+                variant="ghost"
+                size="sm"
+                color={headingColor}
+              >
+                Back to Home
+              </Button>
+            </Link>
+          </Flex>
+
           <Flex direction="column" align="center">
             <Heading
               as="h2"
-              size="xl"
+              size={{ base: "lg", md: "xl" }}
               color={headingColor}
               fontWeight="bold"
               mb={2}
+              textAlign="center"
             >
               Admin Login
             </Heading>
@@ -163,7 +179,7 @@ const AdminLogin = ({ onLoginSuccess }) => {
           )}
 
           <form onSubmit={handleSubmit}>
-            <VStack spacing={4}>
+            <VStack spacing={{ base: 3, md: 4 }}>
               <FormControl id="username" isRequired>
                 <FormLabel>Username</FormLabel>
                 <Input
@@ -171,22 +187,24 @@ const AdminLogin = ({ onLoginSuccess }) => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Enter your username"
-                  size="lg"
+                  size={{ base: "md", md: "lg" }}
                   focusBorderColor="blue.400"
+                  height={{ base: "40px", md: "50px" }}
                 />
               </FormControl>
 
               <FormControl id="password" isRequired>
                 <FormLabel>Password</FormLabel>
-                <InputGroup size="lg">
+                <InputGroup size={{ base: "md", md: "lg" }}>
                   <Input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
                     focusBorderColor="blue.400"
+                    height={{ base: "40px", md: "50px" }}
                   />
-                  <InputRightElement>
+                  <InputRightElement width="4.5rem" height="100%">
                     <IconButton
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                       icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
@@ -194,6 +212,7 @@ const AdminLogin = ({ onLoginSuccess }) => {
                       onClick={() => setShowPassword(!showPassword)}
                       size="sm"
                       tabIndex="-1"
+                      h="1.75rem"
                     />
                   </InputRightElement>
                 </InputGroup>
@@ -202,13 +221,13 @@ const AdminLogin = ({ onLoginSuccess }) => {
               <Button
                 type="submit"
                 colorScheme={buttonColorScheme}
-                size="lg"
+                size={{ base: "md", md: "lg" }}
                 width="full"
-                mt={4}
+                mt={{ base: 3, md: 4 }}
                 isLoading={loading}
                 loadingText="Logging in..."
-                py={6}
-                fontSize="md"
+                py={{ base: 5, md: 6 }}
+                fontSize={{ base: "md", md: "md" }}
                 fontWeight="bold"
               >
                 Login

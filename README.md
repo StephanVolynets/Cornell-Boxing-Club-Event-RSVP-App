@@ -1,287 +1,127 @@
-<<<<<<< HEAD
 # Cornell Boxing Club Event Registration App
 
-> ***A Modern, Responsive React Application for managing Cornell Boxing Club event registrations with real-time updates and an intuitive user interface.***
-
-<h1 align="center">Snapshot</h1>
-=======
-# Cornell Boxing Club Event Registration App 
 > Created by **Stephan Volynets**
->> A _modern, responsive full stack single page application_ for managing Cornell Boxing Club member event registrations, with real time updates and an intuitive user interface.
->>> This was my final project for [INFO 2310](https://classes.cornell.edu/browse/roster/SP25/class/INFO/2310).   Special Thanks to [Professor Kyle Harms](https://kharms.infosci.cornell.edu/index.html) for teaching me Client Side Rendering & all things HTTP communication! 
+>> A modern, responsive MERN stack application for managing Cornell Boxing Club event registrations with an intuitive user interface.
+>>> This was my final project for [INFO 2310](https://classes.cornell.edu/browse/roster/SP25/class/INFO/2310).   Special Thanks to [Professor Kyle Harms](https://kharms.infosci.cornell.edu/index.html) for teaching me Client Side Rendering & all things HTTP communication!
 
->>>>>>> 27da3e054b59e2107b7a2b03360614bc8ab5bb59
+## Snapshots
 
-<p>
-   <img src="https://github.com/user-attachments/assets/9db0ee41-016a-4a71-880c-90c4af1feb38" alt="Desktop Browser" style="width:100% height="700">
-        <br>
-</p>
+**Main Application View**
+![Main Application View](https://placeholder.com/add-your-screenshot-here)
 
-</p>
- <p align="center">
-    <img src="https://github.com/user-attachments/assets/b2c1f129-d5df-430f-b578-87cda7d1e030" alt="Desktop Browser"  width="300">
- </p>
+**Mobile Responsive Design**
+![Mobile View](https://placeholder.com/add-your-mobile-screenshot-here)
 
-# Project Overview
+**Dark Mode**
+![Dark Mode](https://placeholder.com/add-your-dark-mode-screenshot-here)
 
-This application provides a seamless boxing event management experience with features including:
+**Admin Dashboard**
+![Admin Dashboard](https://placeholder.com/add-your-admin-screenshot-here)
 
-- 🥊 Dynamic boxing event listing with consistent card height layout
-<<<<<<< HEAD
-- 🔄 Real-time registration updates
-=======
-- 🔄 Real time registration updates
->>>>>>> 27da3e054b59e2107b7a2b03360614bc8ab5bb59
-- 💫 Smooth animations and transitions
-- 🌙 Dark/Light theme toggle
-- 🎨 Cornell Boxing themed UI with Chakra UI
-- 📱 Full responsive design
-- ⚡ Optimized performance with React
+## Features
 
-## Technical Stack
+- **Responsive Design**: Fully optimized for mobile, tablet, and desktop
+- **Dynamic Event Cards**: Consistent card layout with all event details
+- **Real-time RSVP System**: Users can register and cancel registrations
+- **Dark/Light Mode**: Toggle between themes with animated transitions
+- **Animated UI Elements**: Engaging animations including floating boxing gloves
+- **Cornell Email Validation**: Ensures registrations are from Cornell students
+- **Admin Dashboard**: Complete event management interface
+- **User-friendly Interface**: Intuitive design optimized for all users
 
-- **Frontend**: React, Chakra UI, Framer Motion
-- **Backend**: Express.js, MongoDB
-- **State Management**: React Hooks
-- **API Communication**: Axios
-- **Styling**: Chakra UI + Custom Boxing Theme
-- **Animation**: Framer Motion for card and theme animations
+## Technology Stack
 
-## Performance Optimizations
+- **Frontend**: React with hooks for state management
+- **UI Framework**: Chakra UI with custom theme
+- **Animations**: Framer Motion
+- **Backend**: Express.js REST API
+- **Database**: MongoDB for event and registration storage
+- **State Management**: React Context API and local state
+- **HTTP Client**: Axios for API communication
 
-- **Fixed height card components** for consistent UI regardless of content length
-- **Optimized re-renders** with proper state management
-- **Efficient API calls** for registration updates
-- **Skeleton loading states** during data fetch
-- **Responsive design** for all screen sizes
+## Application Architecture
 
-## Component Architecture
+### Component Structure
 
-### Component Tree
 ```
 App
-├── ChakraProvider (Theme)
-└── Container
-    ├── ThemeToggle (Dark/Light Mode)
-    ├── Header
-    ├── EventList
-    │   ├── LoadingSkeleton
-    │   └── EventCard
-    │       ├── Event Details
-    │       ├── Boxing Icons
-    │       └── Registration Button
-    └── Footer
+├── ThemeToggle
+├── Router
+│   ├── MainApp (Home Page)
+│   │   ├── Header
+│   │   ├── EventList
+│   │   │   ├── EventsHeader (with animated boxing gloves)
+│   │   │   └── EventCard (multiple)
+│   │   │       └── ReservationModal
+│   │   └── Footer
+│   ├── AdminPanel
+│   │   ├── AdminLogin
+│   │   └── AdminDashboard
+│   │       ├── Event Management
+│   │       └── RSVP Management
+│   └── DebugPage
+└── Toast Notifications
 ```
 
 ### Data Flow
-```mermaid
-graph TD
-    A[App] -->|Events Data| B[EventList]
-    A -->|Registration Actions| B
-    B -->|Event Props| C[EventCard]
-    C -->|Registration Toggle| A
-    A -->|API Calls| D[Backend]
-    D -->|Response| A
-    A -->|Theme| E[ThemeToggle]
-    E -->|Toggle| A
-```
 
-## Data Management
+- Events are fetched from MongoDB via Express API
+- User RSVPs are tracked in both state and localStorage
+- RSVP actions trigger API calls to update event registrations
+- Admin authentication uses backend session management
+- Theme preferences are managed through Chakra UI's context
 
-### API Integration
 
-```javascript
-// Example API call implementation
-const fetchEvents = async () => {
-  try {
-    setLoading(true);
-    const response = await axios.get("http://localhost:8080/api/events");
-    setEvents(response.data);
-  } catch (err) {
-    toast({
-      title: "Error",
-      description: "Failed to load events",
-      status: "error",
-      duration: 5000,
-      isClosable: true,
-    });
-  } finally {
-    setLoading(false);
-  }
-};
-```
+## Usage Guide
 
-### API Endpoints
+### For Event Attendees
+
+1. **Browse Events**: View all upcoming boxing events on the homepage
+2. **Toggle Theme**: Use the theme toggle in the top right to switch between light and dark mode
+3. **Register for Events**: Click the "Register Now" button to sign up for an event
+4. **Enter Email**: Provide your Cornell email (must end with @cornell.edu)
+5. **Manage Registrations**: Cancel registrations at any time from the event card
+
+### For Administrators
+
+1. **Access Admin Panel**: Navigate to /admin and log in with provided credentials
+2. **Manage Events**: Create, edit, and delete boxing events
+3. **View Registrations**: See all participants for each event
+4. **Remove Participants**: Option to remove participants from events if needed
+
+## API Endpoints
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/api/events` | GET | Fetch all boxing events |
+| `/api/events/:id` | GET | Get details for a specific event |
+| `/api/events/create` | POST | Create a new event (admin) |
+| `/api/events/:id` | PUT | Update an event (admin) |
+| `/api/events/:id/delete` | DELETE | Delete an event (admin) |
 | `/api/events/:id/headCount/rsvp` | POST | Register for an event |
 | `/api/events/:id/headCount/unrsvp` | POST | Cancel event registration |
+| `/api/admin/login` | POST | Admin authentication |
+| `/api/admin/logout` | POST | Admin logout |
+| `/api/admin/check-auth` | GET | Verify admin authentication |
 
-### Database Schema:
-**Events Collection**
+## Key Features in Detail
 
-> Each document in the `events` collection has the following schema:
+### Responsive Design
+The application is fully responsive with optimized layouts for all device sizes. Components adjust their sizing, spacing, and behavior based on the screen size to ensure a seamless experience across desktop, tablet, and mobile devices.
 
-- `_id`: ObjectId - Unique identifier for the event
-- `name`: String - Name of the boxing event
-- `description`: String - Description of the event
-- `date`: Date - Date when the event is scheduled
-- `location`: String - Location where the boxing event will take place
-- `headCount`: Integer - Number of fighters who have registered for the event
-- `rsvpEmails`: Array - List of Cornell emails that have registered (optional)
+### Animated Elements
+- **Boxing Gloves**: Floating animation with slight rotation
+- **Event Cards**: Smooth loading transitions with staggered appearance
+- **Theme Toggle**: Rotate animation on hover
+- **Modal transitions**: Slide-in animations for modals
 
-Example Document:
-```json
-{
-  "_id": ObjectId("..."),
-  "name": "Boxing Basics Workshop",
-  "description": "Learn the fundamentals of boxing: stance, footwork, and jab training for beginners.",
-  "date": "2025-05-15",
-  "location": "Cornell Boxing Gym, Ithaca",
-  "headCount": 12,
-  "rsvpEmails": ["student1@cornell.edu", "student2@cornell.edu"]
-}
-```
+### User Authentication
+The application uses Cornell email validation to ensure only Cornell students can register for events. The admin panel features a secure login system with session management.
 
-## React Hooks Usage
-
-### State Management
-```javascript
-// Core state hooks
-const [events, setEvents] = useState([]);
-const [loading, setLoading] = useState(false);
-const [userRSVPs, setUserRSVPs] = useState({});
-const { colorMode, toggleColorMode } = useColorMode();
-```
-
-### Effect Patterns
-```javascript
-// Data fetching effect
-useEffect(() => {
-  const fetchEvents = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get("http://localhost:8080/api/events");
-      setEvents(response.data);
-    } catch (err) {
-      toast({
-        title: "Error",
-        description: "Failed to load events",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchEvents();
-}, [toast]);
-```
-
-## User Interface
-
-### Design System
-- **Theme**: Custom Chakra UI theme with Cornell Boxing Club color scheme
-- **Colors**: Red, black, and blue accents with dark/light mode support
-<<<<<<< HEAD
-- **Components**: Boxing-themed icons and consistent card layout
-=======
-- **Components**: Boxing themed icons and consistent card layout
->>>>>>> 27da3e054b59e2107b7a2b03360614bc8ab5bb59
-- **Typography**: Enhanced readability with optimized font styles
-- **Animations**: Smooth transitions and hover effects
-
-### Key Features
-
-1. **Fixed-Height Card Layout**
-   - Consistent 450px height cards regardless of content
-<<<<<<< HEAD
-   - Well-structured content areas with appropriate spacing
-   - Boxing-themed icons for better visual hierarchy
-=======
-   - Well structured content areas with appropriate spacing
-   - Boxing themed icons for better visual hierarchy
->>>>>>> 27da3e054b59e2107b7a2b03360614bc8ab5bb59
-
-2. **Dark Mode Integration**
-   - Complete theme support with appropriate color shifts
-   - Interactive toggle button in the header area
-   - Preserves readability in both modes
-
-3. **Registration Experience**
-   - Interactive buttons with visual feedback
-   - Cornell email validation for registration
-   - Confirmation system with toast notifications
-
-4. **Accessibility**
-   - ARIA labels throughout the interface
-   - Keyboard navigation support
-   - Screen reader compatible components
-   - High contrast text in both light and dark modes
-
-### User Flow
-1. User views boxing events in a clean, consistent grid
-2. Toggles between light and dark mode as preferred
-3. Clicks registration button for an event of interest
-4. Enters Cornell email for validation
-5. Receives confirmation with visual feedback
-6. Sees updated fighter count for the event
-
-## Getting Started
-
-### Prerequisites
-- Node.js (v14 or higher)
-- MongoDB
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-```
-
-2. Install dependencies:
-```bash
-# Install client dependencies
-cd client
-npm install
-
-# Install server dependencies
-cd ../server
-npm install
-```
-
-3. Configure environment:
-```bash
-# Create .env file in server directory
-echo "PORT=8080" > .env
-```
-
-### Running Locally
-
-1. Initialize the database with boxing events:
-```bash
-cd server
-mongosh init.mongo.js
-```
-
-2. Start the server:
-```bash
-cd server
-npm run dev
-```
-
-3. Start the client:
-```bash
-cd client
-npm start
-```
-
-The application will be available at `http://localhost:3000`.
+### Data Persistence
+- Event registrations are stored in the database
+- User email preferences are saved in localStorage
+- Admin sessions are managed with cookies
 
 ## Project Structure
 
@@ -292,86 +132,117 @@ EVENT-RSVP-APP-MERN-2/
 │   └── src/
 │       ├── components/     # UI components
 │       │   ├── Footer.jsx
-│       │   ├── Header.jsx
 │       │   ├── ReservationModal.jsx
 │       │   └── ThemeToggle.jsx
-│       ├── App.jsx         # Main application component
-│       ├── EventCard.jsx   # Boxing event card component
-│       ├── EventList.jsx   # Event grid display
-│       ├── index.jsx       # Entry point
-│       └── theme.js        # Chakra UI theme configuration
+│       ├── App.jsx         # Main application
+│       ├── AdminDashboard.jsx # Admin interface
+│       ├── AdminLogin.jsx  # Admin authentication
+│       ├── AdminPanel.jsx  # Admin container
+│       ├── DebugPage.jsx   # Development utilities
+│       ├── EventCard.jsx   # Event display component
+│       ├── EventList.jsx   # Event listing with headers
+│       ├── Header.jsx      # Main application header
+│       └── theme.js        # Chakra UI theme config
 │
 └── server/                 # Express backend
+    ├── controllers/        # Request handlers
     ├── db/                 # Database connection
-    │   └── conn.mjs
-    ├── init.mongo.js       # Database initialization with boxing events
-    └── server.mjs          # Express API routes and server configuration
+    ├── middleware/         # Express middleware
+    ├── models/             # Mongoose schemas
+    ├── routes/             # API routes
+    └── server.js           # Entry point
 ```
 
-<<<<<<< HEAD
-## Deployment
+## Customization Options
 
-This application can be deployed using several cloud platforms:
+The application can be customized in several ways:
 
-### Deploying to Heroku
+1. **Theme Colors**: Modify the theme.js file to change the color scheme
+2. **Event Card Layout**: Adjust EventCard.jsx to change the card design
+3. **Animation Timing**: Edit motion parameters in components using Framer Motion
+4. **Backend URL**: Update API URLs in axios calls for different environments
 
-1. Install Heroku CLI and login:
+## Troubleshooting
+
+### Common Issues
+
+- **API Connection Errors**: Ensure the server is running on the correct port
+- **MongoDB Connection**: Verify your MongoDB connection string is correct
+- **CORS Issues**: Check CORS settings in server.js if hosting frontend and backend separately
+- **Authentication Problems**: Clear browser cookies if experiencing admin login issues
+
+### Debugging
+
+- The application includes a Debug page at /debug for development purposes
+- Check browser console for frontend errors
+- Server logs provide information about backend issues
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14+)
+- MongoDB
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
 ```bash
-npm install -g heroku
-heroku login
+git clone https://github.com/yourusername/EVENT-RSVP-APP-MERN-2.git
+cd EVENT-RSVP-APP-MERN-2
 ```
 
-2. Create a new Heroku app:
+2. Install dependencies for client and server
 ```bash
-heroku create cornell-boxing-app
+# Install client dependencies
+cd client
+npm install
+
+# Install server dependencies
+cd ../server
+npm install
 ```
 
-3. Add MongoDB Atlas:
+3. Set up environment variables
 ```bash
-heroku addons:create mongolab
+# Create .env file in server directory with your MongoDB connection string
+# Example:
+MONGODB_URI=mongodb://localhost:27017/cornell-boxing-events
+PORT=8080
+SESSION_SECRET=your_session_secret
 ```
 
-4. Deploy:
+### Running the Application
+
+1. Start the server
 ```bash
-git push heroku main
+cd server
+npm start
 ```
 
-### Deploying to Render
+2. In a new terminal, start the client
+```bash
+cd client
+npm start
+```
 
-1. Sign up at [render.com](https://render.com/)
-2. Connect your GitHub repository
-3. Configure environment variables:
-   - `NODE_ENV`: production
-   - `MONGODB_URI`: Your MongoDB connection string
-   - `MONGODB_DB_NAME`: boxing-events
+3. Access the application
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8080
+- Admin Panel: http://localhost:3000/admin (Credentials: Coach/monkey)
 
-### Deploying to Railway
+## License
 
-1. Sign up at [railway.app](https://railway.app/)
-2. Import your GitHub repository
-3. Add MongoDB plugin
-4. Configure environment variables
-5. Deploy
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-### Production Considerations
+## Credits
 
-- Set up proper environment variables
-- Configure MongoDB Atlas for database
-- Enable HTTPS for secure connections
-- Set up proper error logging and monitoring
-- Configure proper CORS settings for production
+- Created for Cornell Boxing Club
+- UI components built with Chakra UI
+- Animations powered by Framer Motion
+- Icons from React Icons library
 
-=======
->>>>>>> 27da3e054b59e2107b7a2b03360614bc8ab5bb59
-## Contributing
+## Contact
 
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-<<<<<<< HEAD
-=======
-
-> Special Thanks to [Professor Kyle Harms](https://kharms.infosci.cornell.edu/index.html) for teaching me client side rendering & all things HTTP communication!
->>>>>>> 27da3e054b59e2107b7a2b03360614bc8ab5bb59
+For questions or support, please contact the development team at [svv6@cornell.edu].

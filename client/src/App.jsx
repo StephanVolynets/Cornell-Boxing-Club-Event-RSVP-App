@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ChakraProvider, Container, VStack, useToast, Box } from "@chakra-ui/react";
+import { ChakraProvider, Container, VStack, useToast, Box, Image, useColorModeValue } from "@chakra-ui/react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import EventList from "./EventList";
 import Header from "./Header";
@@ -18,6 +18,7 @@ const MainApp = () => {
   const [userEmail, setUserEmail] = useState("");
   const [emailsByEvent, setEmailsByEvent] = useState({});
   const toast = useToast();
+  const bgColor = useColorModeValue("gray.50", "gray.900");
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -185,20 +186,26 @@ const MainApp = () => {
   };
 
   return (
-    <Container maxW="container.xl" py={8}>
-      <VStack spacing={8} align="stretch">
-        <Header />
-        <EventList
-          events={events}
-          onRSVPToggle={toggleRSVP}
-          loading={loading}
-          userRSVPs={userRSVPs}
-          userEmail={userEmail}
-          emailsByEvent={emailsByEvent}
-        />
-      </VStack>
-      <Footer /> {/* Moved Footer outside of VStack */}
-    </Container>
+    <Box
+      position="relative"
+      minHeight="100vh"
+      bg={bgColor}
+    >
+      <Container maxW="container.xl" pt={{ base: 12, md: 4 }} pb={4} position="relative" zIndex="1">
+        <VStack spacing={4} align="stretch">
+          <Header />
+          <EventList
+            events={events}
+            onRSVPToggle={toggleRSVP}
+            loading={loading}
+            userRSVPs={userRSVPs}
+            userEmail={userEmail}
+            emailsByEvent={emailsByEvent}
+          />
+        </VStack>
+        <Footer />
+      </Container>
+    </Box>
   );
 };
 

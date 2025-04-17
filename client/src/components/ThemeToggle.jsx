@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { IconButton, useColorMode, useColorModeValue, Box } from '@chakra-ui/react';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
@@ -8,32 +8,36 @@ const ThemeToggle = () => {
   const isDark = colorMode === 'dark';
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      style={{
-        position: 'absolute',
-        top: '30px',
-        right: '45px',
-        zIndex: 10
-      }}
+    <Box
+      position="fixed"
+      top={{ base: "15px", md: "30px" }}
+      right={{ base: "15px", md: "45px" }}
+      zIndex={1000}
+      transition="all 0.3s ease"
     >
-      <IconButton
-        aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-        variant="ghost"
-        colorScheme={isDark ? "yellow" : "purple"}
-        icon={isDark ? <FaSun size={18} /> : <FaMoon size={18} />}
-        onClick={toggleColorMode}
-        size="lg"
-        borderRadius="full"
-        _hover={{
-          transform: "rotate(30deg)",
-          bg: useColorModeValue("gray.100", "gray.700")
-        }}
-        transition="all 0.2s"
-      />
-    </motion.div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <IconButton
+          aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+          variant="solid"
+          colorScheme={isDark ? "yellow" : "purple"}
+          icon={isDark ? <FaSun size={16} /> : <FaMoon size={16} />}
+          onClick={toggleColorMode}
+          size={{ base: "sm", md: "md" }}
+          borderRadius="full"
+          opacity={{ base: 0.8, md: 0.9 }}
+          boxShadow="md"
+          _hover={{
+            transform: "rotate(30deg)",
+            opacity: 1
+          }}
+          transition="all 0.2s"
+        />
+      </motion.div>
+    </Box>
   );
 };
 
