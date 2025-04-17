@@ -143,7 +143,7 @@ const AdminDashboard = ({ user, onLogout }) => {
     }
   };
 
-  // Helper function to normalize MongoDB IDs
+  // Helper function to normalize MongoDB IDs, hello
   const normalizeId = (id) => {
     // If the ID contains colons (like in console errors), extract just the actual ID portion
     if (typeof id === 'string' && id.includes(':')) {

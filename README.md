@@ -4,19 +4,55 @@
 >> A modern, responsive MERN stack application for managing Cornell Boxing Club event registrations with an intuitive user interface.
 >>> This was my final project for [INFO 2310](https://classes.cornell.edu/browse/roster/SP25/class/INFO/2310).   Special Thanks to [Professor Kyle Harms](https://kharms.infosci.cornell.edu/index.html) for teaching me Client Side Rendering & all things HTTP communication!
 
-## Snapshots
+### Main Application View
 
-**Main Application View**
-![Main Application View](https://placeholder.com/add-your-screenshot-here)
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/5719d311-39ce-40f1-9c3b-fac787b8538a" alt="Screenshot"  >
+</div>
 
-**Mobile Responsive Design**
-![Mobile View](https://placeholder.com/add-your-mobile-screenshot-here)
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/3cb9a527-32f8-43bc-88fd-5b057d27b81c" alt="Screenshot" >
+</div>
 
-**Dark Mode**
-![Dark Mode](https://placeholder.com/add-your-dark-mode-screenshot-here)
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/5b5708e4-f4be-4380-a71f-8a85f408174c" alt="Screenshot"  >
+</div>
 
-**Admin Dashboard**
-![Admin Dashboard](https://placeholder.com/add-your-admin-screenshot-here)
+### Admin Dashboard 
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/f5e24b3d-fdc4-44aa-8a50-0e290564da55" alt="Screenshot"  >
+</div>
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/558e6b14-2be9-4e7d-a4e9-a873483652e2" alt="Screenshot"  >
+</div>
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/90ccbf79-2254-4fda-9c68-6d46716dace3" alt="Screenshot"  >
+</div>
+
+### Mobile Responsive Design
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/d2f670c1-d4d0-47b5-8fb3-5064f598d156" alt="Screenshot" width="50%" height="800">
+</div>
+
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/f39146b7-2b77-472a-af9f-0f415bf22d6c" alt="Screenshot" width="50%" height="800">
+</div>
+
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/fc3bca38-985b-44ac-996f-b29ca6b02b97" alt="Screenshot" width="50%" height="800">
+</div>
+
+### Dark Mode
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/4bcd6c5b-1c49-45a9-af29-b285aa3bd55a" alt="Screenshot"  >
+</div>
+
 
 ## Features
 

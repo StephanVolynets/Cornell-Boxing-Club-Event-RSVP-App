@@ -1,6 +1,6 @@
 use('app');
 
-// Drop the existing events collection if it exists
+// Drop the existing events collection if it exists!!
 db.events.drop();
 
 // Create a new events collection with Cornell Boxing Club events
