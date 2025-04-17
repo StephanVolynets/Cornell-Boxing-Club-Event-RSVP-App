@@ -1,25 +1,17 @@
-// Script to initialize the MongoDB database with sample events
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Get current file path and set up __dirname equivalent for ES modules
+// Determine __dirname in ES module context
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load environment variables from .env file
+// Load environment variables
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
-// Get connection string from environment variable
 const connectionString = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB_NAME || 'cornell-boxing-events';
-
-// Output environment info for debugging
-console.log('Environment variables:');
-console.log('- NODE_ENV:', process.env.NODE_ENV);
-console.log('- MONGODB_DB_NAME:', dbName);
-console.log('- MONGODB_URI:', connectionString ? 'Found (value hidden for security)' : 'Not found');
 
 // Sample event data
 const sampleEvents = [
@@ -58,57 +50,32 @@ const sampleEvents = [
 ];
 
 async function initializeDatabase() {
-  console.log('Initializing database...');
-
   if (!connectionString) {
-    console.error('MONGODB_URI is not defined in environment variables');
-    console.error('Please make sure you have a .env file in the server directory with MONGODB_URI defined');
-    process.exit(1);
+    console.error('MONGODB_URI is not defined. Aborting initialization.');
+    return;
   }
 
   const client = new MongoClient(connectionString);
-
   try {
-    // Connect to MongoDB
     await client.connect();
-    console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB for initialization');
 
-    // Get database
     const db = client.db(dbName);
-    console.log(`Using database: ${dbName}`);
-
-    // Check if events collection exists and has documents
-    const collections = await db.listCollections({ name: 'events' }).toArray();
     const eventsCollection = db.collection('events');
     const count = await eventsCollection.countDocuments();
 
-    if (collections.length > 0 && count > 0) {
-      console.log(`Events collection already exists with ${count} documents.`);
-      console.log('Database is already initialized. Skipping sample data creation.');
-    } else {
-      console.log('Events collection is empty or does not exist. Creating sample data...');
-
-      // Insert sample events
+    if (count === 0) {
       const result = await eventsCollection.insertMany(sampleEvents);
-      console.log(`${result.insertedCount} sample events inserted successfully.`);
+      console.log(`Inserted ${result.insertedCount} sample events`);
+    } else {
+      console.log(`Events collection already has ${count} documents, skipping sample data`);
     }
-
-    // List all collections for verification
-    const allCollections = await db.listCollections().toArray();
-    console.log('All collections in database:', allCollections.map(c => c.name));
-
-    console.log('Database initialization complete.');
   } catch (err) {
-    console.error('Error initializing database:', err);
+    console.error('Error during database initialization:', err);
   } finally {
     await client.close();
-    console.log('MongoDB connection closed.');
   }
 }
 
-// Run the initialization function
-initializeDatabase()
-  .catch(console.error)
-  .finally(() => {
-    console.log('Initialization script completed.');
-  });
+// Run initialization once on startup
+initializeDatabase().catch(err => console.error(err));
