@@ -5,7 +5,8 @@
   "main": "server.mjs",
   "scripts": {
     "start": "node server.mjs",
-    "dev": "nodemon server.mjs"
+    "dev": "nodemon server.mjs",
+    "postinstall": "cd client && npm install && npm run build"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -15,7 +16,8 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.10.0",
-    "mongosh": "^2.3.3"
+    "mongosh": "^2.3.3",
+    "react-router-dom": "^6.14.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
