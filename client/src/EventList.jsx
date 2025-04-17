@@ -21,7 +21,7 @@ const item = {
   show: { y: 0, opacity: 1 }
 };
 
-function EventList({ events, onRSVPToggle, loading, userRSVPs }) {
+function EventList({ events, onRSVPToggle, loading, userRSVPs, userEmail, emailsByEvent }) {
   // Calculate items needed to complete the last row
   const columns = { base: 1, md: 2, lg: 3, xl: 4 };
   const maxColumns = 4; // Maximum number of columns in xl view
@@ -35,7 +35,7 @@ function EventList({ events, onRSVPToggle, loading, userRSVPs }) {
         initial="hidden"
         animate="show"
       >
-        <SimpleGrid 
+        <SimpleGrid
           columns={columns}
           spacing={6}
           px={{ base: 4, md: 0 }}
@@ -56,6 +56,9 @@ function EventList({ events, onRSVPToggle, loading, userRSVPs }) {
                     onRSVPToggle={onRSVPToggle}
                     isRSVPed={userRSVPs[event._id]}
                     isLoading={loading}
+                    userEmail={userEmail}
+                    eventEmail={emailsByEvent[event._id]}
+                    emailsByEvent={emailsByEvent}
                   />
                 </MotionBox>
               ))}
@@ -74,6 +77,9 @@ function EventList({ events, onRSVPToggle, loading, userRSVPs }) {
                     onRSVPToggle={() => {}}
                     isRSVPed={false}
                     isLoading={false}
+                    userEmail={userEmail}
+                    eventEmail={null}
+                    emailsByEvent={{}}
                   />
                 </Box>
               ))}

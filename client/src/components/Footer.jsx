@@ -1,12 +1,15 @@
 import React from 'react';
-import { Box, Text, Flex, Link, Icon } from '@chakra-ui/react';
-import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { Box, Text, Flex, Link, Icon, HStack, useColorModeValue } from '@chakra-ui/react';
+import { FaGithub, FaLinkedin, FaLock, FaTools } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { Link as RouterLink } from 'react-router-dom';
 
 const MotionBox = motion(Box);
 
 function Footer() {
   const currentYear = new Date().getFullYear();
+  const adminLinkColor = useColorModeValue('gray.400', 'gray.600');
+  const adminHoverColor = useColorModeValue('gray.700', 'gray.400');
 
   return (
     <MotionBox
@@ -70,6 +73,35 @@ function Footer() {
             <Icon as={FaLinkedin} boxSize={5} />
           </Link>
         </Flex>
+      </Flex>
+
+      {/* Admin Link */}
+      <Flex justify="center" mt={4} gap={4}>
+        <Link
+          as={RouterLink}
+          to="/admin"
+          fontSize="xs"
+          color={adminLinkColor}
+          _hover={{ color: adminHoverColor, textDecoration: 'none' }}
+          display="flex"
+          alignItems="center"
+        >
+          <Icon as={FaLock} boxSize={3} mr={1} />
+          Admin
+        </Link>
+
+        <Link
+          as={RouterLink}
+          to="/debug"
+          fontSize="xs"
+          color={adminLinkColor}
+          _hover={{ color: adminHoverColor, textDecoration: 'none' }}
+          display="flex"
+          alignItems="center"
+        >
+          <Icon as={FaTools} boxSize={3} mr={1} />
+          Debug
+        </Link>
       </Flex>
     </MotionBox>
   );

@@ -8,6 +8,9 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import cookieParser from "cookie-parser";
 
 const port = process.env.PORT || 8080;
 const app = express();
@@ -16,11 +19,140 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(cors());
+// Secret key for JWT
+const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key_for_dev";
+
+// Fix CORS configuration
+app.use(cors({
+  origin: ["http://localhost:3000", "http://localhost:8080"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json());
+app.use(cookieParser());
+
+// Authentication middleware
+const authenticateAdmin = (req, res, next) => {
+  try {
+    console.log("Authenticating admin...");
+    console.log("Cookies:", req.cookies);
+    console.log("Headers:", req.headers);
+
+    const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+    console.log("Token:", token);
+
+    if (!token) {
+      console.log("No token found");
+      return res.status(401).json({ message: "Authentication required" });
+    }
+
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      console.log("Decoded token:", decoded);
+      req.admin = decoded;
+      next();
+    } catch (error) {
+      console.log("Token verification error:", error.message);
+      return res.status(401).json({ message: "Invalid or expired token" });
+    }
+  } catch (error) {
+    console.log("Authentication error:", error);
+    return res.status(500).json({ message: "Server error during authentication" });
+  }
+};
+
+// Admin authentication route
+app.post("/api/admin/login", async (req, res) => {
+  try {
+    console.log("Login attempt:", req.body);
+    const { username, password } = req.body;
+
+    // For this implementation, we'll use hardcoded credentials
+    // In a production app, you would store these securely in a database with hashed passwords
+    if (username === "coach" && password === "monkey") {
+      // Create JWT token
+      const token = jwt.sign(
+        { username, role: "admin" },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+
+      // Set token as HTTP-only cookie
+      res.cookie('token', token, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        sameSite: 'lax', // Changed from 'strict' to allow cross-site requests
+        secure: process.env.NODE_ENV === 'production'
+      });
+
+      console.log("Login successful, token created");
+      return res.status(200).json({
+        message: "Login successful",
+        user: { username, role: "admin" }
+      });
+    }
+
+    console.log("Invalid credentials");
+    return res.status(401).json({ message: "Invalid credentials" });
+  } catch (error) {
+    console.log("Login error:", error);
+    return res.status(500).json({ message: "Server error during login" });
+  }
+});
+
+// Admin logout route
+app.post("/api/admin/logout", (req, res) => {
+  res.clearCookie('token');
+  return res.status(200).json({ message: "Logout successful" });
+});
+
+// Auth status check endpoint
+app.get("/api/admin/check-auth", authenticateAdmin, (req, res) => {
+  console.log("Auth check successful for user:", req.admin);
+  return res.status(200).json({
+    isAuthenticated: true,
+    user: req.admin
+  });
+});
+
+// Testing endpoint to verify API is working
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "UP", timestamp: new Date().toISOString() });
+});
+
+// Debug endpoint to check events directly (no auth required)
+app.get("/api/debug/events", async (req, res) => {
+  try {
+    console.log("Debug: Fetching events");
+    const events = await db.collection("events").find({}).toArray();
+    console.log(`Debug: Found ${events.length} events`);
+    res.json({ count: events.length, events: events });
+  } catch (err) {
+    console.error("Debug: Error fetching events:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Debug endpoint for auth testing with cors
+app.get("/api/debug/auth-test", (req, res) => {
+  // Log headers for debugging
+  console.log("Debug auth test - Headers:", req.headers);
+
+  // Get cookie and auth header
+  const cookies = req.cookies;
+  const authHeader = req.headers.authorization;
+
+  res.json({
+    message: "Auth test endpoint",
+    cookies: cookies || {},
+    hasAuthHeader: !!authHeader,
+    timestamp: new Date().toISOString()
+  });
+});
 
 // RESTful API Setup:
-// docs were really good: https://www.mongodb.com/docs/manual/crud/
+// docs are really good: https://www.mongodb.com/docs/manual/crud/
 
 // Fetching all events && details from the MongoDB database
 // This route is used to display all events on the client side, initial load.
@@ -53,7 +185,8 @@ app.post("/api/events/create", async (req, res) => {
       description,
       date,
       location,
-      headCount: headCount || 0 // Default to 0 if not provided
+      headCount: headCount || 0, // Default to 0 if not provided
+      participants: [] // Array to store emails of participants
     };
 
     // Insert the new event into the database
@@ -98,17 +231,42 @@ app.post("/api/events/:id/headCount/rsvp", async (req, res) => {
     // Remember mongos strict typing.
     // convert to ObjectId
     const eventId = new ObjectId(req.params.id);
-    // store in result to verify it was modified
-    const result = await db
-    // CRUD to increment ($inc)
-      .collection("events")
-      .updateOne({ _id: eventId }, { $inc: { headCount: 1 } });
+    const { email } = req.body;
+
+    // Check if email is provided
+    if (!email) {
+      return res.status(400).json({ message: "Email is required for RSVP" });
+    }
+
+    // Check if the user has already RSVP'd to this event
+    const event = await db.collection("events").findOne({ _id: eventId });
+
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    // Initialize participants array if it doesn't exist
+    const participants = event.participants || [];
+
+    // Check if email already exists in participants
+    if (participants.includes(email)) {
+      return res.status(400).json({ message: "You have already registered for this event" });
+    }
+
+    // Add email to participants and increment headCount
+    const result = await db.collection("events").updateOne(
+      { _id: eventId },
+      {
+        $inc: { headCount: 1 },
+        $push: { participants: email }
+      }
+    );
 
     // Check for update, if not, return 404
     if (result.modifiedCount === 0) {
       return res
         .status(404)
-        .send({ message: "Event not found or already RSVPed" });
+        .send({ message: "Event not found or update failed" });
     }
 
     // If updated, return updated event
@@ -128,14 +286,41 @@ app.post("/api/events/:id/headCount/rsvp", async (req, res) => {
 app.post("/api/events/:id/headCount/unrsvp", async (req, res) => {
   try {
     const eventId = new ObjectId(req.params.id);
-    const result = await db
-      .collection("events")
-      .updateOne({ _id: eventId }, { $inc: { headCount: -1 } });
+    const { email } = req.body;
+
+    // Check if email is provided
+    if (!email) {
+      return res.status(400).json({ message: "Email is required for un-RSVP" });
+    }
+
+    // Check if the user has RSVP'd to this event
+    const event = await db.collection("events").findOne({ _id: eventId });
+
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    // Initialize participants array if it doesn't exist
+    const participants = event.participants || [];
+
+    // Check if email exists in participants
+    if (!participants.includes(email)) {
+      return res.status(400).json({ message: "You are not registered for this event" });
+    }
+
+    // Remove email from participants and decrement headCount
+    const result = await db.collection("events").updateOne(
+      { _id: eventId },
+      {
+        $inc: { headCount: -1 },
+        $pull: { participants: email }
+      }
+    );
 
     if (result.modifiedCount === 0) {
       return res
         .status(404)
-        .send({ message: "Event not found or already RSVPed" });
+        .send({ message: "Event not found or update failed" });
     }
 
     const updatedEvent = await db
@@ -204,3 +389,306 @@ app.listen(port, () => {
 //     res.status(500).json({ error: err.message });
 //   }
 // });
+
+// Admin routes for event management
+app.get("/api/admin/events", authenticateAdmin, async (req, res) => {
+  try {
+    console.log("Fetching admin events");
+    // Use the same query as the public endpoint to ensure we get valid events
+    const query = {
+      name: { $ne: null },
+      description: { $ne: null },
+      date: { $ne: null },
+      location: { $ne: null },
+    };
+
+    // Show all queries and collections for debugging
+    console.log("Database collections:");
+    const collections = await db.listCollections().toArray();
+    console.log(collections.map(c => c.name));
+
+    // Use explicit 'events' collection based on our DB checker results
+    const events = await db.collection("events").find(query).toArray();
+    console.log(`Found ${events.length} events:`, events);
+    res.json(events);
+  } catch (err) {
+    console.error("Error in admin events endpoint:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get all RSVPs for a specific event
+app.get("/api/admin/events/:id/rsvps", authenticateAdmin, async (req, res) => {
+  try {
+    console.log("Fetching RSVPs for event ID:", req.params.id);
+
+    // Important: Validate the ID format first
+    let eventId;
+    try {
+      eventId = new ObjectId(req.params.id);
+    } catch (idError) {
+      console.error("Invalid ObjectId format:", req.params.id);
+      return res.status(400).json({ message: "Invalid event ID format" });
+    }
+
+    const event = await db.collection("events").findOne({ _id: eventId });
+
+    if (!event) {
+      console.log("Event not found");
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    console.log("Found event:", event.name);
+    console.log("Participants:", event.participants || []);
+
+    // Return the participants array (emails)
+    res.json({
+      event: {
+        name: event.name,
+        date: event.date,
+        _id: event._id
+      },
+      participants: event.participants || []
+    });
+  } catch (err) {
+    console.error("Error in RSVPs endpoint:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Debug endpoint to fetch RSVPs directly (no auth)
+app.get("/api/debug/events/:id/rsvps", async (req, res) => {
+  try {
+    console.log("Debug: Fetching RSVPs for event ID:", req.params.id);
+
+    // Important: Validate the ID format first
+    let eventId;
+    try {
+      eventId = new ObjectId(req.params.id);
+    } catch (idError) {
+      console.error("Debug: Invalid ObjectId format:", req.params.id);
+      return res.status(400).json({ message: "Invalid event ID format" });
+    }
+
+    const event = await db.collection("events").findOne({ _id: eventId });
+
+    if (!event) {
+      console.log("Debug: Event not found");
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    console.log("Debug: Found event:", event.name);
+    console.log("Debug: Participants:", event.participants || []);
+
+    // Return the participants array (emails)
+    res.json({
+      event: {
+        name: event.name,
+        date: event.date,
+        _id: event._id
+      },
+      participants: event.participants || []
+    });
+  } catch (err) {
+    console.error("Debug: Error in RSVPs endpoint:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Update an event
+app.put("/api/admin/events/:id", authenticateAdmin, async (req, res) => {
+  try {
+    console.log("Updating event ID:", req.params.id);
+    console.log("Update data:", req.body);
+
+    // Important: Validate the ID format first
+    let eventId;
+    try {
+      eventId = new ObjectId(req.params.id);
+    } catch (idError) {
+      console.error("Invalid ObjectId format:", req.params.id);
+      return res.status(400).json({ message: "Invalid event ID format" });
+    }
+
+    const { name, description, date, location } = req.body;
+
+    if (!name || !description || !date || !location) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const result = await db.collection("events").updateOne(
+      { _id: eventId },
+      { $set: {
+        name,
+        description,
+        date,
+        location
+      }}
+    );
+
+    console.log("Update result:", result);
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    const updatedEvent = await db.collection("events").findOne({ _id: eventId });
+    console.log("Updated event:", updatedEvent);
+    res.json(updatedEvent);
+  } catch (err) {
+    console.error("Error updating event:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Debug endpoint to update an event (no auth)
+app.put("/api/debug/events/:id", async (req, res) => {
+  try {
+    console.log("Debug: Updating event ID:", req.params.id);
+    console.log("Debug: Update data:", req.body);
+
+    // Important: Validate the ID format first
+    let eventId;
+    try {
+      eventId = new ObjectId(req.params.id);
+    } catch (idError) {
+      console.error("Debug: Invalid ObjectId format:", req.params.id);
+      return res.status(400).json({ message: "Invalid event ID format" });
+    }
+
+    const { name, description, date, location } = req.body;
+
+    if (!name || !description || !date || !location) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const result = await db.collection("events").updateOne(
+      { _id: eventId },
+      { $set: {
+        name,
+        description,
+        date,
+        location
+      }}
+    );
+
+    console.log("Debug: Update result:", result);
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    const updatedEvent = await db.collection("events").findOne({ _id: eventId });
+    console.log("Debug: Updated event:", updatedEvent);
+    res.json(updatedEvent);
+  } catch (err) {
+    console.error("Debug: Error updating event:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Delete an RSVP from an event
+app.delete("/api/admin/events/:id/rsvps/:email", authenticateAdmin, async (req, res) => {
+  try {
+    console.log("Removing RSVP from event:", req.params.id, "Email:", req.params.email);
+
+    // Important: Validate the ID format first
+    let eventId;
+    try {
+      eventId = new ObjectId(req.params.id);
+    } catch (idError) {
+      console.error("Invalid ObjectId format:", req.params.id);
+      return res.status(400).json({ message: "Invalid event ID format" });
+    }
+
+    const emailToRemove = req.params.email;
+
+    // Get the event to check if the email exists
+    const event = await db.collection("events").findOne({ _id: eventId });
+
+    if (!event) {
+      console.log("Event not found");
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    if (!event.participants || !event.participants.includes(emailToRemove)) {
+      console.log("Email not found in participants");
+      return res.status(404).json({ message: "Email not found in participants" });
+    }
+
+    // Remove the email and decrement headCount
+    const result = await db.collection("events").updateOne(
+      { _id: eventId },
+      {
+        $pull: { participants: emailToRemove },
+        $inc: { headCount: -1 }
+      }
+    );
+
+    console.log("RSVP removal result:", result);
+
+    if (result.modifiedCount === 0) {
+      return res.status(500).json({ message: "Failed to remove participant" });
+    }
+
+    const updatedEvent = await db.collection("events").findOne({ _id: eventId });
+    console.log("Updated event after removal:", updatedEvent);
+    res.json(updatedEvent);
+  } catch (err) {
+    console.error("Error removing RSVP:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Debug endpoint to remove an RSVP (no auth)
+app.delete("/api/debug/events/:id/rsvps/:email", async (req, res) => {
+  try {
+    console.log("Debug: Removing RSVP from event:", req.params.id, "Email:", req.params.email);
+
+    // Important: Validate the ID format first
+    let eventId;
+    try {
+      eventId = new ObjectId(req.params.id);
+    } catch (idError) {
+      console.error("Debug: Invalid ObjectId format:", req.params.id);
+      return res.status(400).json({ message: "Invalid event ID format" });
+    }
+
+    const emailToRemove = req.params.email;
+
+    // Get the event to check if the email exists
+    const event = await db.collection("events").findOne({ _id: eventId });
+
+    if (!event) {
+      console.log("Debug: Event not found");
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    if (!event.participants || !event.participants.includes(emailToRemove)) {
+      console.log("Debug: Email not found in participants");
+      return res.status(404).json({ message: "Email not found in participants" });
+    }
+
+    // Remove the email and decrement headCount
+    const result = await db.collection("events").updateOne(
+      { _id: eventId },
+      {
+        $pull: { participants: emailToRemove },
+        $inc: { headCount: -1 }
+      }
+    );
+
+    console.log("Debug: RSVP removal result:", result);
+
+    if (result.modifiedCount === 0) {
+      return res.status(500).json({ message: "Failed to remove participant" });
+    }
+
+    const updatedEvent = await db.collection("events").findOne({ _id: eventId });
+    console.log("Debug: Updated event after removal:", updatedEvent);
+    res.json(updatedEvent);
+  } catch (err) {
+    console.error("Debug: Error removing RSVP:", err);
+    res.status(500).json({ error: err.message });
+  }
+});

@@ -16,3 +16,10 @@
     "**/*.cjs"
   ]
 }
+// "editor.formatOnSave": true,
+// "editor.formatOnPaste": true,
+// "editor.formatOnType": true,
+// "editor.formatOnSaveMode": "modifications",
+// "editor.formatOnSaveOptions": {
+//   "tabSize": 2
+// }
