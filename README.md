@@ -159,36 +159,6 @@ The application uses Cornell email validation to ensure only Cornell students ca
 - User email preferences are saved in localStorage
 - Admin sessions are managed with cookies
 
-## Project Structure
-
-```
-EVENT-RSVP-APP-MERN-2/
-├── client/                 # React frontend
-│   ├── public/             # Static files
-│   └── src/
-│       ├── components/     # UI components
-│       │   ├── Footer.jsx
-│       │   ├── ReservationModal.jsx
-│       │   └── ThemeToggle.jsx
-│       ├── App.jsx         # Main application
-│       ├── AdminDashboard.jsx # Admin interface
-│       ├── AdminLogin.jsx  # Admin authentication
-│       ├── AdminPanel.jsx  # Admin container
-│       ├── DebugPage.jsx   # Development utilities
-│       ├── EventCard.jsx   # Event display component
-│       ├── EventList.jsx   # Event listing with headers
-│       ├── Header.jsx      # Main application header
-│       └── theme.js        # Chakra UI theme config
-│
-└── server/                 # Express backend
-    ├── controllers/        # Request handlers
-    ├── db/                 # Database connection
-    ├── middleware/         # Express middleware
-    ├── models/             # Mongoose schemas
-    ├── routes/             # API routes
-    └── server.js           # Entry point
-```
-
 ## Customization Options
 
 The application can be customized in several ways:
